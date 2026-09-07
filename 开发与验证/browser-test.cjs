@@ -1,5 +1,5 @@
 const {chromium}=require('playwright');
-const {rooms}=require('./core.js');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');const {pathToFileURL}=require('node:url');
+const {rooms,finalAssessment}=require('./core.js');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');const {pathToFileURL}=require('node:url');
 const root=path.dirname(__dirname),out=path.join(__dirname,'浏览器验证');fs.mkdirSync(out,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined});try{
@@ -29,7 +29,10 @@ const root=path.dirname(__dirname),out=path.join(__dirname,'浏览器验证');fs
   const wrong=(rooms[r].question.correct+1)%3;await p.locator(`[data-answer="${wrong}"]`).click();assert.equal(await p.locator('.complete-panel').count(),0);
   await p.locator(`[data-answer="${rooms[r].question.correct}"]`).click();await p.locator('[data-action="next-room"]').waitFor();await p.locator('[data-action="next-room"]').click();
  }
- await p.getByText('出口已开启，探索还在继续。').waitFor();await p.screenshot({path:path.join(out,'08-通关成果.png'),fullPage:true});
+ await p.getByText('出口已开启，探索还在继续。').waitFor();assert.equal(await p.getByRole('button',{name:'教师指南'}).count(),0);assert.equal(await p.locator('.assessment-card textarea').count(),0);assert.equal(await p.locator('[data-action="assessment-submit"]').isDisabled(),true);
+ for(const item of finalAssessment)await p.locator(`[data-action="assessment-answer"][data-id="${item.id}"][data-value="${item.correct}"]`).click();
+ for(const [key,value] of [['transferDevice','电风扇'],['transferFunction','促进空气流动'],['transferMethod','打开电源并选择风速'],['transferEvidence','观察气流是否让机关移动']])await p.locator(`[data-action="transfer-answer"][data-id="${key}"][data-value="${value}"]`).click();
+ assert.equal(await p.locator('[data-action="assessment-submit"]').isDisabled(),false);await p.locator('[data-action="assessment-submit"]').click();assert.match(await p.locator('.assessment-result').innerText(),/任务单考核完成/);await p.screenshot({path:path.join(out,'08-通关成果.png'),fullPage:true});
  await p.locator('[data-action="creator"]').click();await p.locator('#challenge-reason').fill('羽片较轻，用小风，并按时停止。');await p.locator('[data-action="save-challenge"]').click();
  await p.locator('[data-action="peer-run"]').click();assert.match(await p.locator('#peer-result').innerText(),/还没有满足/);
  await p.locator('[data-action="peer-power"]').click();await p.locator('#peer-speed').selectOption('1');await p.locator('#peer-timer').selectOption('30');await p.locator('[data-action="peer-run"]').click();
@@ -40,6 +43,6 @@ const root=path.dirname(__dirname),out=path.join(__dirname,'浏览器验证');fs
  await p.getByRole('button',{name:'关闭对话框',exact:true}).click();await p.reload();await p.getByText('出口已开启，探索还在继续。').waitFor();
  for(const width of [390,768]){await p.setViewportSize({width,height:900});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await p.locator('[data-action="review"]').click();await p.screenshot({path:path.join(out,`窄屏-${width}.png`),fullPage:true});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await p.locator('[data-action="room"][data-room="5"]').click();await p.locator('[data-action="next-room"]').click();}
  const noStorage=await browser.newContext({viewport:{width:390,height:844}});await noStorage.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw new Error('blocked')}})});const ns=await noStorage.newPage();await ns.goto(pathToFileURL(path.join(root,'index.html')).href);assert.ok(await ns.locator('.save-warning').isVisible());await ns.getByRole('button',{name:'进入密室'}).click();await noStorage.close();
- assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);fs.writeFileSync(path.join(out,'测试结果.json'),JSON.stringify({result:'PASS',mainTasks:18,explanationChecks:6,wrongOperationBlocked:true,wrongExplanationBlocked:true,timerStops:true,refreshResumesPending:true,keyboardCodeFocus:true,trafficAnimationObeysSignal:true,peerEvidenceSurvivesNoteEdit:true,exportVerified:true,viewports:[1440,768,390],storageFailureHandled:true,externalRequests:requests,pageErrors:errors},null,2));console.log('PASS: 18操作/6解释，错误分支、定时停止、刷新恢复、键盘、同伴验证、导出、窄屏、禁用存储、零外部请求。');
+ assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);fs.writeFileSync(path.join(out,'测试结果.json'),JSON.stringify({result:'PASS',mainTasks:18,explanationChecks:6,taskSheetAssessment:true,noLongTextRequired:true,teacherGuideHidden:true,wrongOperationBlocked:true,wrongExplanationBlocked:true,timerStops:true,refreshResumesPending:true,keyboardCodeFocus:true,trafficAnimationObeysSignal:true,peerEvidenceSurvivesNoteEdit:true,exportVerified:true,viewports:[1440,768,390],storageFailureHandled:true,externalRequests:requests,pageErrors:errors},null,2));console.log('PASS: 18操作/6解释/5项终局任务单判断，选项拼句、错误分支、定时停止、刷新恢复、键盘、同伴验证、导出、窄屏、禁用存储、零外部请求。');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

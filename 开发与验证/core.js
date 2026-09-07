@@ -39,6 +39,22 @@ const rooms=[
  hints:['每个任务都可以在前面的控制线索簿中找到类似经历。','根据新需求调整数值：这里风速2挡，音量1格。','投影开+窗帘合+灯关；风扇开+2挡+定时30；播放开+音量1。'],
  question:{title:'如果遇到一个没用过的设备，你会怎样开始？',options:['把所有按钮都按一遍，不看变化','先了解需要的功能与控制方法，再操作并观察结果','只记住设备名称就可以了'],correct:1,explain:'先明确需求，再选择控制方法，通过观察结果验证是否实现功能。这种方法可以迁移到新设备。'}}
 ];
+const finalAssessment=[
+ {id:'deviceFunction',label:'设备—功能—控制方法',prompt:'洗衣机已经通电，衣物需要脱水，下一步应怎样做？',options:['只等待设备自己改变模式','选择“脱水”模式并观察是否执行','把电饭锅切换到煮粥'],correct:1,evidence:'能根据需要选择设备功能和控制方法。'},
+ {id:'controlNeed',label:'根据需要调整',prompt:'轻羽片容易被吹走时，哪种控制更合适？',options:['风速越大越好','减小风速，并根据需要设置定时','只要打开电源就完成'],correct:1,evidence:'能让控制方法服务于具体任务。'},
+ {id:'publicDevice',label:'街道上的设备',prompt:'为了让十字路口车辆有序通行，谁控制什么设备？',options:['驾驶员控制路灯','交通管理部门控制交通信号灯','任何路人都可以修改信号灯'],correct:1,evidence:'能把公共场景中的角色、设备和功能对应起来。'},
+ {id:'observeResult',label:'观察与调整',prompt:'按下设备按钮后，怎样判断控制是否有效？',options:['按钮按下就算完成','观察设备结果是否满足任务，再决定是否调整','不需要观察结果'],correct:1,evidence:'能用“控制—观察—调整”验证功能。'},
+ {id:'evolution',label:'设备的发展',prompt:'从机械钥匙门锁到智能门锁，哪种说法更合理？',options:['智能门锁出现后机械锁就没有用途','控制方式发生变化，开门功能基本保留','两种门锁的控制方法完全相同'],correct:1,evidence:'能说明控制方式发展与功能延续。'}
+];
+function scoreAssessment(answers={}){
+ const details=finalAssessment.map(item=>({id:item.id,correct:answers[item.id]===item.correct}));
+ const score=details.filter(item=>item.correct).length;
+ const transferKeys=['transferDevice','transferFunction','transferMethod','transferEvidence'];
+ const transferComplete=transferKeys.every(key=>typeof answers[key]==='string'&&answers[key].trim());
+ const transfer=transferComplete?{complete:true,sentence:`我会控制${answers.transferDevice}，让它${answers.transferFunction}。我会${answers.transferMethod}，并通过${answers.transferEvidence}判断是否成功。`}:{complete:false,sentence:''};
+ const ready=details.every(item=>answers[item.id]!==undefined)&&transfer.complete;
+ return {ready,complete:details.every(item=>item.correct)&&transfer.complete,score,max:finalAssessment.length,details,transfer};
+}
 function check(r,s,c){
  const yes=()=>({ok:true,text:rooms[r].tasks[s].effect});
  const no=text=>({ok:false,text});
@@ -59,6 +75,6 @@ function check(r,s,c){
  if(r===4)return (s===0?c.key==='齿形钥匙'&&c.oldOpen:s===1?c.code==='246'&&c.smartOpen:c.evolution==='控制方法改变，开门功能保留')?yes():no(['需要匹配的齿形钥匙，并实际转动钥匙。','输入246后，还要按验证开锁；输错可以清除重来。','回想两种操作：开门的基本功能保留，控制方法发生了变化。'][s]);
  return no('请回到当前任务重新观察。');
 }
-return {rooms,initial,check};
+return {rooms,initial,check,finalAssessment,scoreAssessment};
 })();
 if(typeof module!=='undefined')module.exports=EscapeCore;
