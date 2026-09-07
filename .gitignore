@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+__pycache__/
+*.pyc
+.env
+.env.*
+当前访问地址.txt
+开发与验证/浏览器验证/
+开发与验证/文档验证/

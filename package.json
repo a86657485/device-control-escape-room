@@ -1,0 +1,17 @@
+{
+  "name": "device-control-escape-room",
+  "version": "1.0.0",
+  "private": true,
+  "description": "六年级信息科技设备控制密室：离线HTML、局域网课堂与配套教学设计",
+  "scripts": {
+    "build": "node 开发与验证/build.cjs",
+    "test": "node --test 开发与验证/core.test.cjs",
+    "test:e2e": "node 开发与验证/browser-test.cjs",
+    "docs": "node 开发与验证/make-docs.cjs"
+  },
+  "devDependencies": {
+    "docx": "9.6.1",
+    "playwright": "1.62.1"
+  },
+  "engines": { "node": ">=20" }
+}
