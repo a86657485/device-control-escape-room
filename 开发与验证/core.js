@@ -3,78 +3,345 @@ const EscapeCore = (() => {
 const initial=()=>({lamp:false,projector:false,curtain:false,audio:false,volume:0,fan:false,speed:0,timer:0,washer:false,wmode:'未选择',cooker:false,cmode:'未选择',role:'未选择',vehicle:false,signal:'全部停止',street:false,key:'未选择',oldOpen:false,code:'',smartOpen:false,evolution:'未选择'});
 const rooms=[
  {name:'光影入口',tag:'LIGHT & SOUND',icon:'◈',key:'光之晶',color:'#f3ce86',intro:'门上写着：先让房间回应你。灯光、影像与声音里，藏着第一枚晶石。',tasks:[
- {title:'照亮调查台',goal:'打开照明灯，找出暗处的调查笔记。',device:'照明灯',method:'按照明开关',effect:'灯亮，提供照明',expect:'暗处会变亮'},
- {title:'让隐藏图案显现',goal:'启动投影，合上窗帘，并关闭照明灯，让幕布上的图案清楚显现。',device:'投影设备、照明灯、窗帘',method:'打开投影，合上窗帘，关闭照明',effect:'幕布图案更清晰',expect:'投影图案更容易看清'},
- {title:'听见房间的回应',goal:'打开音频播放器，把音量设为 2 格，让线索广播清楚播放。声音也有可见提示。',device:'播放器',method:'开启播放，音量设为 2 格',effect:'播放线索音频',expect:'播放器开始播放'}],
+ {"title":"暗处的调查笔记","goal":"调查台上的字迹藏在暗处，队员凑近也看不清。让大家能辨认笔记，同时不必启动无关设备。","device":"照明灯","method":"按照明开关","effect":"灯亮，提供照明","expect":"笔记所在的位置变亮","hints":["先找出阻碍阅读的环境条件。","哪类设备的功能能改变这里的明暗？","操作照明灯的开关，再观察调查台。"]},
+ {"title":"模糊的墙面图案","goal":"线索保存在一段影像里，幕布仍是空白。窗外和室内的光线都很强。让图案呈现并清晰可辨。","device":"投影设备、照明灯、窗帘","method":"打开投影，合上窗帘，关闭照明","effect":"幕布图案更清晰","expect":"幕布上的图案清晰可辨","hints":["分别观察“有没有影像”和“是否看得清”。","影像来源与观看环境是两个问题，可以逐一改变。","启动投影、合上窗帘、关闭照明，再验证图案。"]},
+ {"title":"远处的线索接收器","goal":"线索以声音传送到房间另一端。接收器要辨认清楚，近处的人又不能被过响的声音打扰。观察接收状态寻找合适效果。","device":"播放器","method":"开启播放，音量设为 2 格","effect":"播放线索音频","expect":"远处听得清，近处不过响","hints":["检查声音是否开始传送，再观察接收端。","无声、太轻和过响会产生不同结果。","开启播放器并选音量2格。接收与舒适状态会同时满足。"]}],
  hints:['先读任务中“要发生什么变化”，再找相应设备。','电源、模式、环境条件可能都要调整，单开电源不一定够。','第1步开灯；第2步投影开、窗帘合、灯关；第3步播放开、音量2。'],
  question:{title:'为什么启动投影后，还要调整窗帘和照明？',options:['为了减少环境光对观看投影的影响','因为窗帘可以给投影设备供电','因为所有设备必须同时打开'],correct:0,explain:'控制设备要服务于具体需要。投影负责显示，窗帘和照明调整观看环境。'}},
  {name:'风力机关室',tag:'WIND MECHANISM',icon:'✧',key:'风之晶',color:'#77d5c3',intro:'一枚晶石困在风力机关中。试试风速、开关和定时如何改变风扇的工作。',tasks:[
- {title:'推动重型叶轮',goal:'开启风扇，风速设为 3 挡，让模拟叶轮转起来。',device:'电风扇',method:'开启电源，风速3挡',effect:'较强气流推动模拟叶轮',expect:'叶轮转动加快'},
- {title:'轻送线索羽片',goal:'风太大会吹走羽片。保持风扇运行，把风速减到 1 挡。',device:'电风扇',method:'把风速减到1挡',effect:'风速减小，羽片平稳移动',expect:'气流变弱'},
- {title:'设置自动停机',goal:'保持 1 挡，定时 30 分钟。试运行会快进时间，观察到时是否停止。',device:'电风扇',method:'保持1挡，定时30分钟',effect:'到设定时间后停止',expect:'30分钟后停止转动'}],
+ {"title":"沉重的叶轮","goal":"一只沉重的叶轮连着门闩。微弱气流只让它缓慢晃动；需要它转得足够有力，才能带动门闩。","device":"电风扇","method":"开启电源，风速3挡","effect":"较强气流推动模拟叶轮","expect":"叶轮转动有力，门闩松动","hints":["观察叶轮是在晃动还是已经带动门闩。","改变气流的强弱，比较叶轮响应。","启动风扇，试用3挡，并观察叶轮。"]},
+ {"title":"易飞走的羽片","goal":"轻巧的羽片要被气流平稳托起。刚才带动重叶轮的气流把它吹偏了，请让它留在托举区。","device":"电风扇","method":"把风速减到1挡","effect":"风速减小，羽片平稳移动","expect":"羽片留在托举区","hints":["先比较羽片与叶轮：它们需要的气流会一样吗？","观察羽片偏离的方向，再调整气流强弱。","让风扇运行在1挡，观察羽片是否稳定。"]},
+ {"title":"等队员回来","goal":"羽片仍要平稳托起。队员09:10离开、09:40返回；装置要一直工作到返回时，然后自行停止，不需要有人守着。","device":"电风扇","method":"保持1挡，定时30分钟","effect":"到设定时间后停止","expect":"队员返回时装置停止","hints":["先保留刚才平稳托起羽片的效果。","算出离开到返回的时长，再寻找能控制工作时长的设置。","保持风扇1挡，定时30分钟；试运行会快进到停止时刻。"]}],
  hints:['观察风扇状态、风速和定时三个位置。','不同任务需要不同风速；定时控制的是停止工作的时间。','第1步风扇开、3挡；第2步改1挡；第3步仍开、1挡、定时30分钟。'],
  question:{title:'风扇这一组操作说明了什么？',options:['风速越大，任何任务都完成得越好','控制方法要与需要实现的功能相对应','风扇能像空调制冷一样直接降低室温'],correct:1,explain:'风速和定时分别满足不同需求。风扇促进空气流动，不能把它当作空调制冷。'}},
  {name:'模式密码间',tag:'MODE WORKSHOP',icon:'▧',key:'序之晶',color:'#bca7ea',intro:'不同模式会唤醒不同机关。读懂任务，分清“设备启动了”和“功能选对了”。',tasks:[
- {title:'取出脱水图案',goal:'衣服已经洗好，只需要脱水。启动洗衣机，选择合适模式。',device:'洗衣机',method:'开启电源，选择脱水',effect:'执行脱水功能',expect:'洗衣机执行脱水'},
- {title:'唤醒快洗符号',goal:'另一份任务需要快洗。保持洗衣机启动，改用快洗模式。',device:'洗衣机',method:'选择快洗模式',effect:'执行快洗功能',expect:'洗衣机执行快洗'},
- {title:'选对早餐任务',goal:'任务写着“今天煮粥”。启动电饭锅，选择对应功能。',device:'电饭锅',method:'开启电源，选择煮粥',effect:'执行煮粥功能',expect:'电饭锅执行煮粥'}],
+ {"title":"湿漉漉的布片","goal":"线索布片已经清洗干净，但还含着很多水。希望尽快去掉多余水分，不再重复清洗。","device":"洗衣机","method":"开启电源，选择脱水","effect":"执行脱水功能","expect":"布片含水减少，没有重复清洗","hints":["任务是去水还是再清洗一次？","查看设备有哪些功能，区分启动设备与选择功能。","启动洗衣机，选择脱水模式。"]},
+ {"title":"赶时间的清洗","goal":"另一组布片沾了少量灰尘，需要经过清洗才能使用。队伍时间有限，希望采用较短的清洗程序。","device":"洗衣机","method":"选择快洗模式","effect":"执行快洗功能","expect":"少量灰尘经较短程序清洗","hints":["这次布片需要的是清洗，和上一批有什么不同？","比较模式的功能与用时；只去水不能去掉任务中的灰尘。","让洗衣机运行在快洗模式。"]},
+ {"title":"一份软烂的早餐","goal":"准备给队员做有汤水、米粒软烂的早餐，食材还没煮熟。需要的成品与一碗较干的米饭不同。","device":"电饭锅","method":"开启电源，选择煮粥","effect":"执行煮粥功能","expect":"得到有汤水、米粒软烂的早餐","hints":["先想清楚成品应是什么样，而不是先按一个熟悉的按钮。","比较加热成品的不同需求；只维持温度不能完成这次任务。","启动电饭锅，选择煮粥模式。"]}],
  hints:['每个面板都有电源和模式，两者都要检查。','同一台洗衣机可以执行不同功能，电饭锅也是如此。','洗衣机开+脱水；随后改快洗；最后电饭锅开+煮粥。'],
  question:{title:'为什么“洗衣机已通电”还不能证明任务完成？',options:['通电就一定进入所需模式','所有模式的作用都相同','还要选对模式，检查是否实现所需功能'],correct:2,explain:'电源开启不等于模式正确。要根据需求选择控制方法，并观察工作结果。'}},
  {name:'城市控制舱',tag:'CITY OBSERVATORY',icon:'⌘',key:'城之晶',color:'#9fcbe8',intro:'透过观察窗，城市正有序运行。找到谁在控制什么，完成三份模拟调度任务。',tasks:[
- {title:'驾驶员出发',goal:'选择“驾驶员”角色，启动模拟车辆，让车辆出发。',device:'车辆',method:'驾驶员控制车辆启动',effect:'车辆出发',expect:'模拟车辆移动'},
- {title:'东西方向通行',goal:'切换为交通管理部门，把模拟交通信号设为“东西通行”。',device:'交通信号灯',method:'交通管理部门设置信号灯',effect:'东西方向通行，南北方向停止',expect:'东西车辆有序通行'},
- {title:'提供夜间照明',goal:'切换为城市管理部门，打开路灯，为夜间通行提供照明。',device:'路灯',method:'城市管理部门控制路灯',effect:'街道得到照明',expect:'路灯亮起'}],
+ {"title":"把物资送达","goal":"一辆运送物资的车还停在出发点。让直接负责驾驶的人接手相应设备，使物资开始前往目的地。","device":"车辆","method":"驾驶员控制车辆启动","effect":"车辆出发","expect":"运送物资的车辆出发","hints":["区分直接驾驶车辆与管理道路设施的职责。","哪种设备能使物资本身移动？","选择驾驶员，启动模拟车辆。"]},
+ {"title":"路口的等候队伍","goal":"东西方向的车辆正在排队，南北方向需继续等候。由负责路口通行秩序的人员调度，让这批车辆安全通过。","device":"交通信号灯","method":"交通管理部门设置信号灯","effect":"东西方向通行，南北方向停止","expect":"东西车辆通行，南北车辆等候","hints":["这里需要改变的是车辆动力，还是不同方向的通行许可？","先确定由谁负责通行秩序，再比较各信号状态。","选择交通管理部门，把信号设为东西通行。"]},
+ {"title":"看不清的夜路","goal":"天色暗下来，行人看不清路面。让负责城市照明设施的人员处理，使道路明亮起来，不改变路口的通行顺序。","device":"路灯","method":"城市管理部门控制路灯","effect":"街道得到照明","expect":"夜间道路得到照明","hints":["先判断是缺少光线，还是需要改变交通次序。","选择能解决明暗问题的设备，并找到相应管理者。","选择城市管理部门，打开路灯。"]}],
  hints:['先确定任务里的使用者或管理者，再选择设备。','车辆负责出行、信号灯组织通行、路灯提供照明。','驾驶员+车辆启动；交通管理部门+东西通行；城市管理部门+路灯开启。'],
  question:{title:'这些设备为什么都可以在本阶段看作控制系统？',options:['只有能够上网的设备才是控制系统','它们由部件组成，按一定规则运行并实现功能','因为它们必须由同一个人操作'],correct:1,explain:'生活中的很多设备都可以看作控制系统。它们按一定规则工作，完成相应功能，不要求必须联网。'}},
  {name:'时间锁档案室',tag:'TIME ARCHIVE',icon:'⌛',key:'时之晶',color:'#efb987',intro:'一边是机械钥匙，一边是电子密码。体验不同控制方式，找出改变与保留。',tasks:[
- {title:'开启机械门锁',goal:'查看锁孔提示，选择匹配的齿形钥匙，再按“转动钥匙”。',device:'机械门锁',method:'匹配的齿形钥匙插入并转动',effect:'机械门锁打开',expect:'匹配钥匙使锁打开'},
- {title:'开启智能门锁',goal:'前三枚晶石各有一个数字。在线索簿中按获得顺序组合，输入后按“验证开锁”。',device:'智能门锁',method:'输入正确密码并验证',effect:'智能门锁打开',expect:'正确密码验证后开锁'},
- {title:'保存发展档案',goal:'比较两次开锁，选择最符合观察结果的一条档案结论。',device:'门锁的发展',method:'比较机械钥匙和电子密码操作',effect:'发现控制方式变化与功能延续',expect:'控制方式变化，基本功能保留'}],
+ {"title":"老锁的机关","goal":"旧锁的内部凹槽高低起伏。手边有几种外形不同的钥匙。找到能与锁芯匹配的工具，并使锁舌收回。","device":"机械门锁","method":"匹配的齿形钥匙插入并转动","effect":"机械门锁打开","expect":"匹配工具带动锁芯，锁舌收回","hints":["观察工具外形与锁芯凹槽是否相配。","选中工具之后，锁芯是否真正发生了转动？","选择齿形钥匙，再转动钥匙。"]},
+ {"title":"晶石中的密码","goal":"新锁没有普通钥匙孔。旁边写着“先得到的晶石先发言”。利用已经收集的刻字，让门锁确认你的身份。","device":"智能门锁","method":"输入正确密码并验证","effect":"智能门锁打开","expect":"刻字信息验证成功，门锁打开","hints":["打开线索簿，看看你获得了哪些刻字。","线索还提示了排列顺序；输入和确认是不同动作。","按获得顺序组合前三枚晶石刻字，输入246，再验证开锁。"]},
+ {"title":"给未来的档案","goal":"两扇门都已经打开。把刚才的经历整理成档案：门锁帮人完成的事是什么，操作的方式又发生了什么变化？","device":"门锁的发展","method":"比较机械钥匙和电子密码操作","effect":"发现控制方式变化与功能延续","expect":"能区分基本功能与控制方式的变化","hints":["分别回想“解决什么需要”和“怎样操作”。","不要把一种操作方式的变化，等同于所有功能都改变。","选择“控制方法改变，开门功能保留”。"]}],
  hints:['旧锁孔旁有形状提示；智能锁密码藏在前三枚晶石上。','机械锁需要匹配钥匙；智能锁输入完成后还要验证。','齿形钥匙并转动；输入246并验证；选择“控制方法改变，开门功能保留”。'],
  question:{title:'从机械门锁到智能门锁，哪种认识更合理？',options:['控制方式发展带来便利，仍需考虑适用条件','智能门锁在所有情况下都更安全','出现智能门锁后机械门锁就没有用途'],correct:0,explain:'科技发展改进控制方式、带来便利。不同形式可以并存，选择还要考虑供电、使用条件与安全需求。'}},
  {name:'终局 · 出口控制台',tag:'THE FINAL GATE',icon:'⬡',key:'探索者印记',color:'#f3ce86',intro:'五枚晶石已经点亮出口。把掌握的控制方法迁移到新任务，让大门真正回应你。',tasks:[
- {title:'显示出口地图',goal:'让地图投影清楚显示：投影开、窗帘合、照明关。',device:'投影设备、照明灯、窗帘',method:'按观看地图需要组合控制',effect:'显示清晰出口地图',expect:'地图清晰显示'},
- {title:'运送出口钥匙',goal:'模拟传送机关需要风扇 2 挡，并定时 30 分钟停止。启动风扇并完成设置。',device:'电风扇',method:'启动，设置2挡和定时30分钟',effect:'传送钥匙后按时停止',expect:'以2挡运行并在30分钟后停止'},
- {title:'播放轻声通行提示',goal:'打开播放器，把音量设为 1 格，让出口提示轻声播放。',device:'播放器',method:'开启播放，音量1格',effect:'轻声播放通行提示',expect:'播放器以较低音量播放'}],
+ {"title":"出口地图显影","goal":"墙上的出口地图保存在影像中，走廊的强光让细线难以辨认。利用已有的控制经验，让地图清楚地显示。","device":"投影设备、照明灯、窗帘","method":"按观看地图需要组合控制","effect":"显示清晰出口地图","expect":"出口地图细线清晰可辨","hints":["把问题分成影像呈现与观看环境两部分。","用之前的线索检查影响清晰程度的条件。","启动投影、合上窗帘、关闭照明。"]},
+ {"title":"钥匙的窄轨道","goal":"钥匙比羽片重，气流太弱推不动，太强又会越过接收区。让它沿轨道移动；10:20开始运行，10:50交接时自行停止。","device":"电风扇","method":"启动，设置2挡和定时30分钟","effect":"传送钥匙后按时停止","expect":"钥匙进入接收区，并在交接时停止","hints":["在羽片与重叶轮的试验之间寻找适合钥匙的气流。","观察是推不动还是越过了接收区；另外算出到交接时的时长。","启动风扇，设置2挡和定时30分钟。"]},
+ {"title":"安静的通行提示","goal":"门边的队员需要听到通行提示，旁边休息的人不应被打扰。提示源已经就位，请让声音只满足近处听清的需要。","device":"播放器","method":"开启播放，音量1格","effect":"轻声播放通行提示","expect":"近处听得清，休息者不受打扰","hints":["这次接收者在门边，不在房间另一端。","比较声音能否听见与是否打扰他人两个结果。","开启播放器，音量设为1格。"]}],
  hints:['每个任务都可以在前面的控制线索簿中找到类似经历。','根据新需求调整数值：这里风速2挡，音量1格。','投影开+窗帘合+灯关；风扇开+2挡+定时30；播放开+音量1。'],
  question:{title:'如果遇到一个没用过的设备，你会怎样开始？',options:['把所有按钮都按一遍，不看变化','先了解需要的功能与控制方法，再操作并观察结果','只记住设备名称就可以了'],correct:1,explain:'先明确需求，再选择控制方法，通过观察结果验证是否实现功能。这种方法可以迁移到新设备。'}}
 ];
-const finalAssessment=[
- {id:'deviceFunction',label:'设备—功能—控制方法',prompt:'洗衣机已经通电，衣物需要脱水，下一步应怎样做？',options:['只等待设备自己改变模式','选择“脱水”模式并观察是否执行','把电饭锅切换到煮粥'],correct:1,evidence:'能根据需要选择设备功能和控制方法。'},
- {id:'controlNeed',label:'根据需要调整',prompt:'轻羽片容易被吹走时，哪种控制更合适？',options:['风速越大越好','减小风速，并根据需要设置定时','只要打开电源就完成'],correct:1,evidence:'能让控制方法服务于具体任务。'},
- {id:'publicDevice',label:'街道上的设备',prompt:'为了让十字路口车辆有序通行，谁控制什么设备？',options:['驾驶员控制路灯','交通管理部门控制交通信号灯','任何路人都可以修改信号灯'],correct:1,evidence:'能把公共场景中的角色、设备和功能对应起来。'},
- {id:'observeResult',label:'观察与调整',prompt:'按下设备按钮后，怎样判断控制是否有效？',options:['按钮按下就算完成','观察设备结果是否满足任务，再决定是否调整','不需要观察结果'],correct:1,evidence:'能用“控制—观察—调整”验证功能。'},
- {id:'evolution',label:'设备的发展',prompt:'从机械钥匙门锁到智能门锁，哪种说法更合理？',options:['智能门锁出现后机械锁就没有用途','控制方式发生变化，开门功能基本保留','两种门锁的控制方法完全相同'],correct:1,evidence:'能说明控制方式发展与功能延续。'}
+const assessmentGroups=['设备与效果','身边的控制系统','设备的发展','拓展调查与迁移'];
+const extensionMaterials=[
+ {title:'早期设备档案',text:'教材举例：辘轳帮助人们从地下取水；弓弩用于提升战斗力；内燃机与解决交通问题有关。这些设备可以看作控制系统的早期形式。'},
+ {title:'门锁的发展档案',text:'教材以门锁说明从早期形式到现代形式的发展。机械钥匙与电子密码等控制方式可以用于实现开锁，早期形式仍在使用，不同形式可以并存。'},
+ {title:'像小研究员一样提问',text:'先确定研究哪种控制系统，再了解它的功能、早期形式和经历的发展变化。资料要能支持这些比较；仅凭外观、名称或广告不能完成探究。'}
 ];
+const finalAssessment=[
+ {
+  "id": "deviceFunction",
+  "group": 0,
+  "label": "功能与模式",
+  "prompt": "清洗后的布片仍有很多水。希望减少水分而不重复清洗，哪种方案更符合需要？",
+  "options": [
+   "启动洗衣机，执行完整标准清洗",
+   "启动洗衣机，选择脱水",
+   "只让洗衣机通电，保留原来的清洗模式"
+  ],
+  "correct": 1,
+  "explanation": "需要改变的是布片含水量。设备通电后，还要选择符合需求的功能。",
+  "source": "教材第12页"
+ },
+ {
+  "id": "controlNeed",
+  "group": 0,
+  "label": "比较控制效果",
+  "prompt": "同一风力机关中，强气流能推动叶轮，却把轻羽片吹出了轨道。这说明什么？",
+  "options": [
+   "控制方法要随对象和期望效果调整",
+   "应该给羽片和叶轮使用同一个设置",
+   "风力机关只需看设备有没有通电"
+  ],
+  "correct": 0,
+  "explanation": "对象和任务不同，对气流的需求就可能不同。要根据观察结果选择设置。",
+  "source": "教材第11—12页"
+ },
+ {
+  "id": "controlTime",
+  "group": 0,
+  "label": "把时间要求转为控制",
+  "prompt": "模拟装置在10:05开始运行，到10:20需要自行停止。哪种设置能满足工作时长的需要？",
+  "options": [
+   "工作20分钟后停止",
+   "一直运行，等人回来再关",
+   "工作15分钟后停止"
+  ],
+  "correct": 2,
+  "explanation": "从10:05到10:20经过15分钟，定时设置对应的是运行时长。",
+  "source": "教材第12页定时功能迁移"
+ },
+ {
+  "id": "observeResult",
+  "group": 0,
+  "label": "有依据地改进",
+  "prompt": "投影启动后，幕布上的图案仍不清楚。哪种做法更有助于找到原因？",
+  "options": [
+   "换一台洗衣机再观察幕布",
+   "改变一个相关环境条件，再比较图案清晰度",
+   "只看电源指示灯，不再观察图案"
+  ],
+  "correct": 1,
+  "explanation": "先明确需要的功能效果，再通过改变相关条件与前后比较验证，而不只看是否通电。",
+  "source": "教材第11页"
+ },
+ {
+  "id": "publicDevice",
+  "group": 1,
+  "label": "夜间公共服务",
+  "prompt": "夜里行人看不清路面，但路口通行顺序正常。最直接相关的设备是哪个？",
+  "options": [
+   "路灯",
+   "收费扫码机",
+   "车辆导航软件"
+  ],
+  "correct": 0,
+  "explanation": "此处需要提供照明。信号、收费、导航与照明提供的服务不同。",
+  "source": "教材第13页"
+ },
+ {
+  "id": "controlSystem",
+  "group": 1,
+  "label": "普通设备也是系统",
+  "prompt": "一台没有联网的普通电风扇能按按钮改变风速。在本课的学习阶段，应怎样看待它？",
+  "options": [
+   "只有联网后才可能成为控制系统",
+   "只有自动运行、不用人操作才属于控制系统",
+   "它也可以看作按一定规则实现功能的控制系统"
+  ],
+  "correct": 2,
+  "explanation": "本课从功能和运行认识控制系统，不以是否联网、是否全自动作为唯一条件。",
+  "source": "教材第13页"
+ },
+ {
+  "id": "unseenDevice",
+  "group": 1,
+  "label": "眼前以外的设备",
+  "prompt": "驾驶员用手机导航到达目的地。除了眼前的手机，还可能有哪些设备在提供服务？",
+  "options": [
+   "只有屏幕内看得见的设备",
+   "导航卫星等不在眼前的设备",
+   "沿途所有家用电饭锅"
+  ],
+  "correct": 1,
+  "explanation": "教材以北斗卫星导航系统提示：一些保障功能的设备并不直接出现在眼前。",
+  "source": "教材第13页教师提示"
+ },
+ {
+  "id": "sameDevice",
+  "group": 1,
+  "label": "方法不同，功能相近",
+  "prompt": "两家的电风扇一台用旋钮，一台用遥控器，都能改变风速。比较它们时，哪种记录更准确？",
+  "options": [
+   "只记录面板颜色",
+   "认为控制方法不同就不能比较功能",
+   "分别记录控制方法，并比较实现的风速变化"
+  ],
+  "correct": 2,
+  "explanation": "控制方法可能因设备型号而不同，分析应同时关注功能与实际操作。",
+  "source": "教材第12页功能分析表"
+ },
+ {
+  "id": "earlyForm",
+  "group": 2,
+  "label": "早期设备解决的需要",
+  "prompt": "阅读早期设备档案。井水在地下，人们需要将它提到地面。与这一需要直接对应的设备是哪个？",
+  "options": [
+   "辘轳",
+   "弓弩",
+   "内燃机"
+  ],
+  "correct": 0,
+  "explanation": "教材举出辘轳的取水用途，体现早期设备服务生产生活的需要。",
+  "source": "教材第14页拓展与提升"
+ },
+ {
+  "id": "evolution",
+  "group": 2,
+  "label": "变化与延续",
+  "prompt": "从用机械钥匙开锁，到采用密码等方式开锁，哪项比较抓住了“功能”和“控制方法”？",
+  "options": [
+   "基本开门功能消失，变成了全新的用途",
+   "基本开门功能保留，控制方式发生变化",
+   "只是门的颜色改变，控制方式没有变化"
+  ],
+  "correct": 1,
+  "explanation": "功能与控制方式应分开比较。形式发展并不意味着原有基本功能消失。",
+  "source": "教材第14页门锁案例"
+ },
+ {
+  "id": "coexist",
+  "group": 2,
+  "label": "新旧设备可以并存",
+  "prompt": "参观时发现有些门用机械锁，有些门用智能锁。由这个现象可以得到什么认识？",
+  "options": [
+   "使用机械锁说明设备没有功能",
+   "智能锁出现后机械锁应该立即停用",
+   "新旧形式可以并存，选择还要看实际需要"
+  ],
+  "correct": 2,
+  "explanation": "教材明确指出早期形式仍在使用，多种形式并存也能体现发展演变。",
+  "source": "教材第14页教师提示"
+ },
+ {
+  "id": "progress",
+  "group": 2,
+  "label": "科技进步的价值",
+  "prompt": "比较两种门锁，哪项观察最能帮助说明控制方式的发展给使用者带来的变化？",
+  "options": [
+   "开锁方式怎样变化，给使用带来什么便利和条件",
+   "外壳哪种颜色更亮",
+   "产品名字哪一个更长"
+  ],
+  "correct": 0,
+  "explanation": "要把技术发展与控制方法、功能及使用者需要联系起来。",
+  "source": "教材第14页问题探究表"
+ },
+ {
+  "id": "inquiryPlan",
+  "group": 3,
+  "label": "设计调查问题",
+  "prompt": "想研究一种自动感应冲水装置的发展，哪组问题更符合教材的问题探究表？",
+  "options": [
+   "广告用了几张图片、包装有多大",
+   "它做什么、早期怎样实现、控制方式怎样变化",
+   "哪款外观最好看、名字最流行"
+  ],
+  "correct": 1,
+  "explanation": "问题探究表关注研究对象、功能、早期形式与发展变化。",
+  "source": "教材第14页问题探究表"
+ },
+ {
+  "id": "investigationEvidence",
+  "group": 3,
+  "label": "用证据支持档案",
+  "prompt": "同伴说“新门锁一定在所有场景下都更方便”。你准备怎样检查这个结论？",
+  "options": [
+   "先赞同同伴，再寻找同一说法的广告",
+   "只比较两个门锁的价格",
+   "比较具体开锁过程、不同使用者需求和使用条件"
+  ],
+  "correct": 2,
+  "explanation": "“所有场景”需要充分证据。比较具体操作与适用条件，比凭名称判断更有依据。",
+  "source": "教材第14页开放探究迁移"
+ },
+ {
+  "id": "oldSystems",
+  "group": 3,
+  "label": "认识早期形式",
+  "prompt": "教材把辘轳、弓弩、内燃机等作为早期形式的例子。这提醒我们怎样看待控制系统的发展？",
+  "options": [
+   "人们很早就在创造设备解决需要，后来继续改进",
+   "只有电脑普及后才出现用于解决需要的设备",
+   "早期设备与人的生产生活没有关系"
+  ],
+  "correct": 0,
+  "explanation": "本课从早期设备到现代控制系统，体会设备持续改善生产和生活条件。",
+  "source": "教材第14页"
+ },
+ {
+  "id": "transferPlan",
+  "group": 3,
+  "label": "面对新设备",
+  "prompt": "遇到一台按钮布局不同的新设备，你要完成已知任务。哪种方案更合理？",
+  "options": [
+   "原样照搬另一台设备的按钮位置",
+   "先明确所需功能，了解控制方法，再观察是否达到效果",
+   "把所有模式依次启动，不比较结果"
+  ],
+  "correct": 1,
+  "explanation": "学习的是根据需要选择控制方法并验证结果，可以迁移到不同设备。",
+  "source": "教材第11—14页综合应用"
+ }
+];
+const transferOptions={
+ transferDevice:['照明灯','电风扇','洗衣机','电饭锅','路灯'],
+ transferFunction:['提供照明','促进空气流动','完成脱水','煮粥','提供夜间照明'],
+ transferMethod:['按开关','打开电源并选择风速','开启电源并选择模式','按照明开关','观察设备结果后再调整'],
+ transferEvidence:['观察房间是否变亮','观察气流是否让机关移动','观察设备是否执行所需模式','观察是否按时停止','观察街道是否变亮']
+};
 function scoreAssessment(answers={}){
  const details=finalAssessment.map(item=>({id:item.id,correct:answers[item.id]===item.correct}));
  const score=details.filter(item=>item.correct).length;
- const transferKeys=['transferDevice','transferFunction','transferMethod','transferEvidence'];
- const transferComplete=transferKeys.every(key=>typeof answers[key]==='string'&&answers[key].trim());
- const transfer=transferComplete?{complete:true,sentence:`我会控制${answers.transferDevice}，让它${answers.transferFunction}。我会${answers.transferMethod}，并通过${answers.transferEvidence}判断是否成功。`}:{complete:false,sentence:''};
- const ready=details.every(item=>answers[item.id]!==undefined)&&transfer.complete;
- return {ready,complete:details.every(item=>item.correct)&&transfer.complete,score,max:finalAssessment.length,details,transfer};
+ const transferKeys=Object.keys(transferOptions);
+ const transferComplete=transferKeys.every(key=>transferOptions[key].includes(answers[key]));
+ const matches={
+  '照明灯':{function:'提供照明',alternatives:['提供夜间照明'],methods:['按开关','按照明开关'],evidence:'观察房间是否变亮'},
+  '电风扇':{function:'促进空气流动',methods:['打开电源并选择风速','按开关'],evidence:'观察气流是否让机关移动'},
+  '洗衣机':{function:'完成脱水',methods:['开启电源并选择模式'],evidence:'观察设备是否执行所需模式'},
+  '电饭锅':{function:'煮粥',methods:['开启电源并选择模式'],evidence:'观察设备是否执行所需模式'},
+  '路灯':{function:'提供夜间照明',alternatives:['提供照明'],methods:['按开关','按照明开关'],evidence:'观察街道是否变亮'}
+ };
+ const model=matches[answers.transferDevice];
+ const correct=Boolean(transferComplete&&model&&(model.function===answers.transferFunction||(model.alternatives||[]).includes(answers.transferFunction))&&model.methods.includes(answers.transferMethod)&&model.evidence===answers.transferEvidence);
+ const transfer={complete:transferComplete,correct,sentence:transferComplete?'我会控制'+answers.transferDevice+'，让它'+answers.transferFunction+'。我会'+answers.transferMethod+'，并通过'+answers.transferEvidence+'判断是否成功。':''};
+ const ready=finalAssessment.every(item=>Number.isInteger(answers[item.id])&&answers[item.id]>=0&&answers[item.id]<item.options.length)&&transfer.complete;
+ return {ready,complete:ready&&score===finalAssessment.length&&correct,score,max:finalAssessment.length,details,transfer};
 }
 function check(r,s,c){
  const yes=()=>({ok:true,text:rooms[r].tasks[s].effect});
  const no=text=>({ok:false,text});
  if(r===0||r===5){
-  if(s===0&&r===0)return c.lamp?yes():no('房间仍然昏暗。照明灯还没有打开，试试照明开关。');
-  if(s===(r===0?1:0))return !c.projector?no('投影还没启动，幕布上没有影像。'):!c.curtain?no('窗外光线仍在影响观看，试着合上窗帘。'):c.lamp?no('照明灯仍然亮着，调整照明再观察。'):yes();
-  if(s===2)return !c.audio?no('播放器尚未播放。先开启播放。'):c.volume!==(r===0?2:1)?no(`播放器已启动，但任务要求音量 ${r===0?2:1} 格。`):yes();
+  if(s===0&&r===0)return c.lamp?yes():no('房间仍然昏暗，笔记上的细字难以辨认。');
+  if(s===(r===0?1:0))return !c.projector?no('幕布上没有影像。环境变暗也没有使图案出现。'):!c.curtain?no('幕布已有图案，但窗外的光线使细线难以辨认。'):c.lamp?no('图案已经出现，室内光照仍使图案显得较淡。'):yes();
+  if(s===2){
+   if(!c.audio||c.volume===0)return no('接收端没有听到声音，提示尚未被听见。');
+   if(r===0&&c.volume===1)return no('近处能听见，房间另一端的接收器仍辨认不清。');
+   if((r===0&&c.volume===3)||(r===5&&c.volume>1))return no('声音可以听见，但过响的提示打扰了旁边的人。');
+   return yes();
+  }
  }
  if(r===1||(r===5&&s===1)){
   const target=r===5?2:s===0?3:1;
-  if(!c.fan)return no('风扇没有运行，请打开电源。');
-  if(c.speed!==target)return no(`风扇在 ${c.speed} 挡。观察任务需要：本次需要 ${target} 挡。`);
-  if((s===2||r===5)&&c.timer!==30)return no(`定时为 ${c.timer||'未设置'}${c.timer?'分钟':''}，还不能在任务要求的30分钟后停止。`);
+  if(!c.fan||c.speed===0)return no('没有形成推动机关的气流，机关保持原位。');
+  if(c.speed!==target){
+   if(r===5)return no(c.speed<target?'钥匙只晃动了一下，没有被送入接收区。':'钥匙越过了接收区，气流把它推得太远。');
+   return no(s===0?'叶轮转动缓慢，仍不足以带动门闩。':'羽片被气流吹出了托举区，无法保持稳定。');
+  }
+  if((s===2||r===5)&&c.timer!==30){
+   return no(c.timer===0?'模拟到约定时刻，气流仍没有自行停止。':c.timer<30?'装置提前停下，队员还未到约定的交接时刻。':'约定时刻已到，装置还在继续工作。');
+  }
   return yes();
  }
- if(r===2){const dev=s===2?'cooker':'washer',mode=s===2?'煮粥':s===1?'快洗':'脱水';return !c[dev]?no('设备还未启动，先检查相应电源。'):c[s===2?'cmode':'wmode']!==mode?no(`设备已启动，但模式不符合任务。本次需要“${mode}”。`):yes();}
- if(r===3){const roles=['驾驶员','交通管理部门','城市管理部门'];if(c.role!==roles[s])return no(`先想一想：谁负责这项工作？本任务由${roles[s]}控制相应设备。`);return (s===0?c.vehicle:s===1?c.signal==='东西通行':c.street)?yes():no(['车辆还未启动。','信号状态还不符合东西方向通行的要求。','路灯还未打开，夜间照明任务未完成。'][s]);}
- if(r===4)return (s===0?c.key==='齿形钥匙'&&c.oldOpen:s===1?c.code==='246'&&c.smartOpen:c.evolution==='控制方法改变，开门功能保留')?yes():no(['需要匹配的齿形钥匙，并实际转动钥匙。','输入246后，还要按验证开锁；输错可以清除重来。','回想两种操作：开门的基本功能保留，控制方法发生了变化。'][s]);
+ if(r===2){
+  if(s<2){
+   if(!c.washer)return no('设备没有开始运行，布片状态没有变化。');
+   if(c.wmode!==(s===0?'脱水':'快洗')){
+    if(c.wmode==='未选择')return no('指示灯亮起，但没有工作程序开始。');
+    if(c.wmode==='脱水')return no('设备去掉了部分水分，却没有完成这批布片所需的清洗。');
+    return no(s===0?'设备又开始清洗已经干净的布片，重复了不需要的过程。':'清洗程序开始了，但占用时间较长，与赶时间的需要不符。');
+   }
+  }else{
+   if(!c.cooker)return no('食材还没有开始加热。');
+   if(c.cmode!=='煮粥')return no(c.cmode==='保温'?'设备只在维持温度，没有开始处理未熟的食材。':c.cmode==='煮饭'?'模拟成品较干，和需要汤水、软烂米粒的早餐不同。':'设备通电了，但还没有开始制作早餐的程序。');
+  }
+  return yes();
+ }
+ if(r===3){
+  const roles=['驾驶员','交通管理部门','城市管理部门'];
+  if(c.role!==roles[s])return no('调度申请没有执行：当前角色的职责与这项公共服务不相符。');
+  return (s===0?c.vehicle:s===1?c.signal==='东西通行':c.street)?yes():no(['物资车仍停在出发点，没有前往目的地。','东西方向的队伍仍在等待，没有按此次安排通过路口。','道路仍然昏暗，行人看不清路面。'][s]);
+ }
+ if(r===4)return (s===0?c.key==='齿形钥匙'&&c.oldOpen:s===1?c.code==='246'&&c.smartOpen:c.evolution==='控制方法改变，开门功能保留')?yes():no(['锁芯没有带动锁舌收回。检查外形是否匹配，以及工具是否真正带动了锁芯。','锁舌没有收回。刻字内容、排列顺序和验证是否都已考虑？','这份记录还没有把“解决什么需要”和“怎样操作”分开比较。'][s]);
  return no('请回到当前任务重新观察。');
 }
-return {rooms,initial,check,finalAssessment,scoreAssessment};
+return {rooms,initial,check,finalAssessment,scoreAssessment,transferOptions,assessmentGroups,extensionMaterials};
 })();
 if(typeof module!=='undefined')module.exports=EscapeCore;

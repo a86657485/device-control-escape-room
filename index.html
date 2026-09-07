@@ -8,94 +8,362 @@
 .assessment-card{margin:22px 0;padding:24px;border:1px solid #947b4e;border-radius:18px;background:linear-gradient(145deg,#1c363b,#172a32);box-shadow:0 16px 45px #0002}.assessment-card h2{font-size:25px;margin:9px 0}.assessment-intro{max-width:760px;color:#c7d8d4;font-size:14px;margin:8px 0 20px}.assessment-item,.transfer-group{border:1px solid #446268;border-radius:12px;padding:15px 17px;margin:12px 0;background:#10262d}.assessment-item legend,.transfer-group legend{padding:0 7px;color:#f2cf85;font-size:14px;font-weight:700}.assessment-item legend span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;margin-right:7px;background:#8de0c1;color:#123b34;font-size:12px}.assessment-item p{font-size:13px;color:#d6e0d8;margin:4px 0 11px}.assessment-options{display:flex;flex-wrap:wrap;gap:8px}.assessment-option{flex:1 1 210px;text-align:left;padding:10px 12px;font-size:12px;border-color:#496970;background:#18343b;color:#d4dfdc}.assessment-option.selected{border-color:#8ee0c4;background:#83dfbd18;color:#a9f2d4;box-shadow:inset 0 0 0 1px #83dfbd35}.transfer-builder{margin-top:22px;padding-top:19px;border-top:1px solid #426067}.transfer-group{margin:10px 0;padding:11px 14px}.transfer-group legend{color:#b9d9d1;font-size:12px;font-weight:600}.transfer-group .assessment-option{flex:0 1 auto;font-size:12px;padding:8px 10px}.assessment-sentence{margin:14px 0 0;padding:13px 15px;border-radius:9px;background:#0c2027;color:#eff2d9;border-left:3px solid #f2cf85;font-size:13px;line-height:1.8}.project-evidence{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:17px 0;padding:13px 15px;border-radius:9px;border:1px solid #3f6062;background:#112a31;font-size:12px}.project-evidence b{color:#f2cf85;margin-right:4px}.project-evidence span{color:#afe7d0}.project-evidence span:not(:last-of-type){padding-right:10px;border-right:1px solid #49666a}.project-evidence small{width:100%;color:#9eb8b7}.assessment-submit{min-width:200px}.assessment-result{display:flex;gap:12px;align-items:center;margin-top:13px;padding:13px 15px;border-radius:9px;background:#453b29;border:1px solid #806b43;color:#f0dcae;font-size:13px}.assessment-result.success{background:#193e34;border-color:#4d9975;color:#b8f1d5}.assessment-result span{color:inherit;opacity:.85}@media(max-width:600px){.assessment-card{padding:17px}.assessment-option{flex-basis:100%}.transfer-group .assessment-option{flex:1 1 130px}.assessment-result{display:block}.assessment-result span{display:block;margin-top:5px}}
 
 .mechanism{width:42%;max-width:230px;overflow:hidden}.mechanism svg{height:200px}.feather-float{animation:featherFloat 2.5s ease-in-out infinite}.feather-away{animation:featherAway 1.4s ease-out infinite}.key-travel{animation:keyTravel 2s ease-in-out infinite}.hotspot{z-index:3}@keyframes featherFloat{50%{transform:translate(14px,-8px)}}@keyframes featherAway{to{transform:translate(100px,-130px);opacity:0}}@keyframes keyTravel{50%{transform:translate(155px,85px)}}@media(max-width:480px){.mechanism svg{height:155px}.mechanism .device-label{font-size:9px;letter-spacing:0}}
+.assessment-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0 8px}.assessment-tabs button{text-align:left;font-size:13px;white-space:normal}.assessment-tabs button[aria-current=step]{border-color:var(--gold);color:var(--gold);background:#6c55252c}.assessment-tabs small{display:block;color:var(--muted);margin-top:4px}.assessment-progress{font-size:12px;color:var(--muted);margin:12px 0}.assessment-navigation{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin:18px 0}.extension-reading{padding:15px 18px;background:#213e40;border:1px solid #648078;border-radius:10px;margin:15px 0}.extension-reading summary{cursor:pointer;color:var(--gold);font-weight:600;font-size:14px}.extension-reading article{margin:14px 0}.extension-reading h3{font-size:14px;color:#c4e8d5;margin:6px 0}.extension-reading p{font-size:13px;color:#d2dfd8;line-height:1.8}.answer-review{padding:9px 12px;border-left:3px solid var(--gold);background:#b4934312;color:#e5dcbf!important;font-size:12px!important;line-height:1.8}.mode-reference{font-size:12px;color:var(--muted);margin:12px 0}.mode-reference summary{cursor:pointer}.mode-reference p{margin:7px 0}.playback-observation{padding:8px 10px;border:1px solid #7c916755;border-radius:6px;background:#143535cc;color:#d7edcd;font-size:11px;max-width:240px}.device-label{white-space:normal}@media(max-width:600px){.assessment-tabs{grid-template-columns:repeat(2,1fr)}.assessment-navigation .assessment-submit{min-width:0;width:100%}}
 </style></head><body><main id="app"></main><dialog id="modal" class="modal" aria-labelledby="modal-title"><header class="modal-head"><h2 id="modal-title"></h2><button data-action="close" aria-label="关闭对话框">✕</button></header><div id="modal-body" class="modal-content"></div></dialog><div id="toast" class="toast" role="status" hidden></div><noscript>请使用启用 JavaScript 的浏览器打开游戏。</noscript><script>/* Shared control rules. Illustrative game states are not physical measurements. */
 const EscapeCore = (() => {
 const initial=()=>({lamp:false,projector:false,curtain:false,audio:false,volume:0,fan:false,speed:0,timer:0,washer:false,wmode:'未选择',cooker:false,cmode:'未选择',role:'未选择',vehicle:false,signal:'全部停止',street:false,key:'未选择',oldOpen:false,code:'',smartOpen:false,evolution:'未选择'});
 const rooms=[
  {name:'光影入口',tag:'LIGHT & SOUND',icon:'◈',key:'光之晶',color:'#f3ce86',intro:'门上写着：先让房间回应你。灯光、影像与声音里，藏着第一枚晶石。',tasks:[
- {title:'照亮调查台',goal:'打开照明灯，找出暗处的调查笔记。',device:'照明灯',method:'按照明开关',effect:'灯亮，提供照明',expect:'暗处会变亮'},
- {title:'让隐藏图案显现',goal:'启动投影，合上窗帘，并关闭照明灯，让幕布上的图案清楚显现。',device:'投影设备、照明灯、窗帘',method:'打开投影，合上窗帘，关闭照明',effect:'幕布图案更清晰',expect:'投影图案更容易看清'},
- {title:'听见房间的回应',goal:'打开音频播放器，把音量设为 2 格，让线索广播清楚播放。声音也有可见提示。',device:'播放器',method:'开启播放，音量设为 2 格',effect:'播放线索音频',expect:'播放器开始播放'}],
+ {"title":"暗处的调查笔记","goal":"调查台上的字迹藏在暗处，队员凑近也看不清。让大家能辨认笔记，同时不必启动无关设备。","device":"照明灯","method":"按照明开关","effect":"灯亮，提供照明","expect":"笔记所在的位置变亮","hints":["先找出阻碍阅读的环境条件。","哪类设备的功能能改变这里的明暗？","操作照明灯的开关，再观察调查台。"]},
+ {"title":"模糊的墙面图案","goal":"线索保存在一段影像里，幕布仍是空白。窗外和室内的光线都很强。让图案呈现并清晰可辨。","device":"投影设备、照明灯、窗帘","method":"打开投影，合上窗帘，关闭照明","effect":"幕布图案更清晰","expect":"幕布上的图案清晰可辨","hints":["分别观察“有没有影像”和“是否看得清”。","影像来源与观看环境是两个问题，可以逐一改变。","启动投影、合上窗帘、关闭照明，再验证图案。"]},
+ {"title":"远处的线索接收器","goal":"线索以声音传送到房间另一端。接收器要辨认清楚，近处的人又不能被过响的声音打扰。观察接收状态寻找合适效果。","device":"播放器","method":"开启播放，音量设为 2 格","effect":"播放线索音频","expect":"远处听得清，近处不过响","hints":["检查声音是否开始传送，再观察接收端。","无声、太轻和过响会产生不同结果。","开启播放器并选音量2格。接收与舒适状态会同时满足。"]}],
  hints:['先读任务中“要发生什么变化”，再找相应设备。','电源、模式、环境条件可能都要调整，单开电源不一定够。','第1步开灯；第2步投影开、窗帘合、灯关；第3步播放开、音量2。'],
  question:{title:'为什么启动投影后，还要调整窗帘和照明？',options:['为了减少环境光对观看投影的影响','因为窗帘可以给投影设备供电','因为所有设备必须同时打开'],correct:0,explain:'控制设备要服务于具体需要。投影负责显示，窗帘和照明调整观看环境。'}},
  {name:'风力机关室',tag:'WIND MECHANISM',icon:'✧',key:'风之晶',color:'#77d5c3',intro:'一枚晶石困在风力机关中。试试风速、开关和定时如何改变风扇的工作。',tasks:[
- {title:'推动重型叶轮',goal:'开启风扇，风速设为 3 挡，让模拟叶轮转起来。',device:'电风扇',method:'开启电源，风速3挡',effect:'较强气流推动模拟叶轮',expect:'叶轮转动加快'},
- {title:'轻送线索羽片',goal:'风太大会吹走羽片。保持风扇运行，把风速减到 1 挡。',device:'电风扇',method:'把风速减到1挡',effect:'风速减小，羽片平稳移动',expect:'气流变弱'},
- {title:'设置自动停机',goal:'保持 1 挡，定时 30 分钟。试运行会快进时间，观察到时是否停止。',device:'电风扇',method:'保持1挡，定时30分钟',effect:'到设定时间后停止',expect:'30分钟后停止转动'}],
+ {"title":"沉重的叶轮","goal":"一只沉重的叶轮连着门闩。微弱气流只让它缓慢晃动；需要它转得足够有力，才能带动门闩。","device":"电风扇","method":"开启电源，风速3挡","effect":"较强气流推动模拟叶轮","expect":"叶轮转动有力，门闩松动","hints":["观察叶轮是在晃动还是已经带动门闩。","改变气流的强弱，比较叶轮响应。","启动风扇，试用3挡，并观察叶轮。"]},
+ {"title":"易飞走的羽片","goal":"轻巧的羽片要被气流平稳托起。刚才带动重叶轮的气流把它吹偏了，请让它留在托举区。","device":"电风扇","method":"把风速减到1挡","effect":"风速减小，羽片平稳移动","expect":"羽片留在托举区","hints":["先比较羽片与叶轮：它们需要的气流会一样吗？","观察羽片偏离的方向，再调整气流强弱。","让风扇运行在1挡，观察羽片是否稳定。"]},
+ {"title":"等队员回来","goal":"羽片仍要平稳托起。队员09:10离开、09:40返回；装置要一直工作到返回时，然后自行停止，不需要有人守着。","device":"电风扇","method":"保持1挡，定时30分钟","effect":"到设定时间后停止","expect":"队员返回时装置停止","hints":["先保留刚才平稳托起羽片的效果。","算出离开到返回的时长，再寻找能控制工作时长的设置。","保持风扇1挡，定时30分钟；试运行会快进到停止时刻。"]}],
  hints:['观察风扇状态、风速和定时三个位置。','不同任务需要不同风速；定时控制的是停止工作的时间。','第1步风扇开、3挡；第2步改1挡；第3步仍开、1挡、定时30分钟。'],
  question:{title:'风扇这一组操作说明了什么？',options:['风速越大，任何任务都完成得越好','控制方法要与需要实现的功能相对应','风扇能像空调制冷一样直接降低室温'],correct:1,explain:'风速和定时分别满足不同需求。风扇促进空气流动，不能把它当作空调制冷。'}},
  {name:'模式密码间',tag:'MODE WORKSHOP',icon:'▧',key:'序之晶',color:'#bca7ea',intro:'不同模式会唤醒不同机关。读懂任务，分清“设备启动了”和“功能选对了”。',tasks:[
- {title:'取出脱水图案',goal:'衣服已经洗好，只需要脱水。启动洗衣机，选择合适模式。',device:'洗衣机',method:'开启电源，选择脱水',effect:'执行脱水功能',expect:'洗衣机执行脱水'},
- {title:'唤醒快洗符号',goal:'另一份任务需要快洗。保持洗衣机启动，改用快洗模式。',device:'洗衣机',method:'选择快洗模式',effect:'执行快洗功能',expect:'洗衣机执行快洗'},
- {title:'选对早餐任务',goal:'任务写着“今天煮粥”。启动电饭锅，选择对应功能。',device:'电饭锅',method:'开启电源，选择煮粥',effect:'执行煮粥功能',expect:'电饭锅执行煮粥'}],
+ {"title":"湿漉漉的布片","goal":"线索布片已经清洗干净，但还含着很多水。希望尽快去掉多余水分，不再重复清洗。","device":"洗衣机","method":"开启电源，选择脱水","effect":"执行脱水功能","expect":"布片含水减少，没有重复清洗","hints":["任务是去水还是再清洗一次？","查看设备有哪些功能，区分启动设备与选择功能。","启动洗衣机，选择脱水模式。"]},
+ {"title":"赶时间的清洗","goal":"另一组布片沾了少量灰尘，需要经过清洗才能使用。队伍时间有限，希望采用较短的清洗程序。","device":"洗衣机","method":"选择快洗模式","effect":"执行快洗功能","expect":"少量灰尘经较短程序清洗","hints":["这次布片需要的是清洗，和上一批有什么不同？","比较模式的功能与用时；只去水不能去掉任务中的灰尘。","让洗衣机运行在快洗模式。"]},
+ {"title":"一份软烂的早餐","goal":"准备给队员做有汤水、米粒软烂的早餐，食材还没煮熟。需要的成品与一碗较干的米饭不同。","device":"电饭锅","method":"开启电源，选择煮粥","effect":"执行煮粥功能","expect":"得到有汤水、米粒软烂的早餐","hints":["先想清楚成品应是什么样，而不是先按一个熟悉的按钮。","比较加热成品的不同需求；只维持温度不能完成这次任务。","启动电饭锅，选择煮粥模式。"]}],
  hints:['每个面板都有电源和模式，两者都要检查。','同一台洗衣机可以执行不同功能，电饭锅也是如此。','洗衣机开+脱水；随后改快洗；最后电饭锅开+煮粥。'],
  question:{title:'为什么“洗衣机已通电”还不能证明任务完成？',options:['通电就一定进入所需模式','所有模式的作用都相同','还要选对模式，检查是否实现所需功能'],correct:2,explain:'电源开启不等于模式正确。要根据需求选择控制方法，并观察工作结果。'}},
  {name:'城市控制舱',tag:'CITY OBSERVATORY',icon:'⌘',key:'城之晶',color:'#9fcbe8',intro:'透过观察窗，城市正有序运行。找到谁在控制什么，完成三份模拟调度任务。',tasks:[
- {title:'驾驶员出发',goal:'选择“驾驶员”角色，启动模拟车辆，让车辆出发。',device:'车辆',method:'驾驶员控制车辆启动',effect:'车辆出发',expect:'模拟车辆移动'},
- {title:'东西方向通行',goal:'切换为交通管理部门，把模拟交通信号设为“东西通行”。',device:'交通信号灯',method:'交通管理部门设置信号灯',effect:'东西方向通行，南北方向停止',expect:'东西车辆有序通行'},
- {title:'提供夜间照明',goal:'切换为城市管理部门，打开路灯，为夜间通行提供照明。',device:'路灯',method:'城市管理部门控制路灯',effect:'街道得到照明',expect:'路灯亮起'}],
+ {"title":"把物资送达","goal":"一辆运送物资的车还停在出发点。让直接负责驾驶的人接手相应设备，使物资开始前往目的地。","device":"车辆","method":"驾驶员控制车辆启动","effect":"车辆出发","expect":"运送物资的车辆出发","hints":["区分直接驾驶车辆与管理道路设施的职责。","哪种设备能使物资本身移动？","选择驾驶员，启动模拟车辆。"]},
+ {"title":"路口的等候队伍","goal":"东西方向的车辆正在排队，南北方向需继续等候。由负责路口通行秩序的人员调度，让这批车辆安全通过。","device":"交通信号灯","method":"交通管理部门设置信号灯","effect":"东西方向通行，南北方向停止","expect":"东西车辆通行，南北车辆等候","hints":["这里需要改变的是车辆动力，还是不同方向的通行许可？","先确定由谁负责通行秩序，再比较各信号状态。","选择交通管理部门，把信号设为东西通行。"]},
+ {"title":"看不清的夜路","goal":"天色暗下来，行人看不清路面。让负责城市照明设施的人员处理，使道路明亮起来，不改变路口的通行顺序。","device":"路灯","method":"城市管理部门控制路灯","effect":"街道得到照明","expect":"夜间道路得到照明","hints":["先判断是缺少光线，还是需要改变交通次序。","选择能解决明暗问题的设备，并找到相应管理者。","选择城市管理部门，打开路灯。"]}],
  hints:['先确定任务里的使用者或管理者，再选择设备。','车辆负责出行、信号灯组织通行、路灯提供照明。','驾驶员+车辆启动；交通管理部门+东西通行；城市管理部门+路灯开启。'],
  question:{title:'这些设备为什么都可以在本阶段看作控制系统？',options:['只有能够上网的设备才是控制系统','它们由部件组成，按一定规则运行并实现功能','因为它们必须由同一个人操作'],correct:1,explain:'生活中的很多设备都可以看作控制系统。它们按一定规则工作，完成相应功能，不要求必须联网。'}},
  {name:'时间锁档案室',tag:'TIME ARCHIVE',icon:'⌛',key:'时之晶',color:'#efb987',intro:'一边是机械钥匙，一边是电子密码。体验不同控制方式，找出改变与保留。',tasks:[
- {title:'开启机械门锁',goal:'查看锁孔提示，选择匹配的齿形钥匙，再按“转动钥匙”。',device:'机械门锁',method:'匹配的齿形钥匙插入并转动',effect:'机械门锁打开',expect:'匹配钥匙使锁打开'},
- {title:'开启智能门锁',goal:'前三枚晶石各有一个数字。在线索簿中按获得顺序组合，输入后按“验证开锁”。',device:'智能门锁',method:'输入正确密码并验证',effect:'智能门锁打开',expect:'正确密码验证后开锁'},
- {title:'保存发展档案',goal:'比较两次开锁，选择最符合观察结果的一条档案结论。',device:'门锁的发展',method:'比较机械钥匙和电子密码操作',effect:'发现控制方式变化与功能延续',expect:'控制方式变化，基本功能保留'}],
+ {"title":"老锁的机关","goal":"旧锁的内部凹槽高低起伏。手边有几种外形不同的钥匙。找到能与锁芯匹配的工具，并使锁舌收回。","device":"机械门锁","method":"匹配的齿形钥匙插入并转动","effect":"机械门锁打开","expect":"匹配工具带动锁芯，锁舌收回","hints":["观察工具外形与锁芯凹槽是否相配。","选中工具之后，锁芯是否真正发生了转动？","选择齿形钥匙，再转动钥匙。"]},
+ {"title":"晶石中的密码","goal":"新锁没有普通钥匙孔。旁边写着“先得到的晶石先发言”。利用已经收集的刻字，让门锁确认你的身份。","device":"智能门锁","method":"输入正确密码并验证","effect":"智能门锁打开","expect":"刻字信息验证成功，门锁打开","hints":["打开线索簿，看看你获得了哪些刻字。","线索还提示了排列顺序；输入和确认是不同动作。","按获得顺序组合前三枚晶石刻字，输入246，再验证开锁。"]},
+ {"title":"给未来的档案","goal":"两扇门都已经打开。把刚才的经历整理成档案：门锁帮人完成的事是什么，操作的方式又发生了什么变化？","device":"门锁的发展","method":"比较机械钥匙和电子密码操作","effect":"发现控制方式变化与功能延续","expect":"能区分基本功能与控制方式的变化","hints":["分别回想“解决什么需要”和“怎样操作”。","不要把一种操作方式的变化，等同于所有功能都改变。","选择“控制方法改变，开门功能保留”。"]}],
  hints:['旧锁孔旁有形状提示；智能锁密码藏在前三枚晶石上。','机械锁需要匹配钥匙；智能锁输入完成后还要验证。','齿形钥匙并转动；输入246并验证；选择“控制方法改变，开门功能保留”。'],
  question:{title:'从机械门锁到智能门锁，哪种认识更合理？',options:['控制方式发展带来便利，仍需考虑适用条件','智能门锁在所有情况下都更安全','出现智能门锁后机械门锁就没有用途'],correct:0,explain:'科技发展改进控制方式、带来便利。不同形式可以并存，选择还要考虑供电、使用条件与安全需求。'}},
  {name:'终局 · 出口控制台',tag:'THE FINAL GATE',icon:'⬡',key:'探索者印记',color:'#f3ce86',intro:'五枚晶石已经点亮出口。把掌握的控制方法迁移到新任务，让大门真正回应你。',tasks:[
- {title:'显示出口地图',goal:'让地图投影清楚显示：投影开、窗帘合、照明关。',device:'投影设备、照明灯、窗帘',method:'按观看地图需要组合控制',effect:'显示清晰出口地图',expect:'地图清晰显示'},
- {title:'运送出口钥匙',goal:'模拟传送机关需要风扇 2 挡，并定时 30 分钟停止。启动风扇并完成设置。',device:'电风扇',method:'启动，设置2挡和定时30分钟',effect:'传送钥匙后按时停止',expect:'以2挡运行并在30分钟后停止'},
- {title:'播放轻声通行提示',goal:'打开播放器，把音量设为 1 格，让出口提示轻声播放。',device:'播放器',method:'开启播放，音量1格',effect:'轻声播放通行提示',expect:'播放器以较低音量播放'}],
+ {"title":"出口地图显影","goal":"墙上的出口地图保存在影像中，走廊的强光让细线难以辨认。利用已有的控制经验，让地图清楚地显示。","device":"投影设备、照明灯、窗帘","method":"按观看地图需要组合控制","effect":"显示清晰出口地图","expect":"出口地图细线清晰可辨","hints":["把问题分成影像呈现与观看环境两部分。","用之前的线索检查影响清晰程度的条件。","启动投影、合上窗帘、关闭照明。"]},
+ {"title":"钥匙的窄轨道","goal":"钥匙比羽片重，气流太弱推不动，太强又会越过接收区。让它沿轨道移动；10:20开始运行，10:50交接时自行停止。","device":"电风扇","method":"启动，设置2挡和定时30分钟","effect":"传送钥匙后按时停止","expect":"钥匙进入接收区，并在交接时停止","hints":["在羽片与重叶轮的试验之间寻找适合钥匙的气流。","观察是推不动还是越过了接收区；另外算出到交接时的时长。","启动风扇，设置2挡和定时30分钟。"]},
+ {"title":"安静的通行提示","goal":"门边的队员需要听到通行提示，旁边休息的人不应被打扰。提示源已经就位，请让声音只满足近处听清的需要。","device":"播放器","method":"开启播放，音量1格","effect":"轻声播放通行提示","expect":"近处听得清，休息者不受打扰","hints":["这次接收者在门边，不在房间另一端。","比较声音能否听见与是否打扰他人两个结果。","开启播放器，音量设为1格。"]}],
  hints:['每个任务都可以在前面的控制线索簿中找到类似经历。','根据新需求调整数值：这里风速2挡，音量1格。','投影开+窗帘合+灯关；风扇开+2挡+定时30；播放开+音量1。'],
  question:{title:'如果遇到一个没用过的设备，你会怎样开始？',options:['把所有按钮都按一遍，不看变化','先了解需要的功能与控制方法，再操作并观察结果','只记住设备名称就可以了'],correct:1,explain:'先明确需求，再选择控制方法，通过观察结果验证是否实现功能。这种方法可以迁移到新设备。'}}
 ];
-const finalAssessment=[
- {id:'deviceFunction',label:'设备—功能—控制方法',prompt:'洗衣机已经通电，衣物需要脱水，下一步应怎样做？',options:['只等待设备自己改变模式','选择“脱水”模式并观察是否执行','把电饭锅切换到煮粥'],correct:1,evidence:'能根据需要选择设备功能和控制方法。'},
- {id:'controlNeed',label:'根据需要调整',prompt:'轻羽片容易被吹走时，哪种控制更合适？',options:['风速越大越好','减小风速，并根据需要设置定时','只要打开电源就完成'],correct:1,evidence:'能让控制方法服务于具体任务。'},
- {id:'publicDevice',label:'街道上的设备',prompt:'为了让十字路口车辆有序通行，谁控制什么设备？',options:['驾驶员控制路灯','交通管理部门控制交通信号灯','任何路人都可以修改信号灯'],correct:1,evidence:'能把公共场景中的角色、设备和功能对应起来。'},
- {id:'observeResult',label:'观察与调整',prompt:'按下设备按钮后，怎样判断控制是否有效？',options:['按钮按下就算完成','观察设备结果是否满足任务，再决定是否调整','不需要观察结果'],correct:1,evidence:'能用“控制—观察—调整”验证功能。'},
- {id:'evolution',label:'设备的发展',prompt:'从机械钥匙门锁到智能门锁，哪种说法更合理？',options:['智能门锁出现后机械锁就没有用途','控制方式发生变化，开门功能基本保留','两种门锁的控制方法完全相同'],correct:1,evidence:'能说明控制方式发展与功能延续。'}
+const assessmentGroups=['设备与效果','身边的控制系统','设备的发展','拓展调查与迁移'];
+const extensionMaterials=[
+ {title:'早期设备档案',text:'教材举例：辘轳帮助人们从地下取水；弓弩用于提升战斗力；内燃机与解决交通问题有关。这些设备可以看作控制系统的早期形式。'},
+ {title:'门锁的发展档案',text:'教材以门锁说明从早期形式到现代形式的发展。机械钥匙与电子密码等控制方式可以用于实现开锁，早期形式仍在使用，不同形式可以并存。'},
+ {title:'像小研究员一样提问',text:'先确定研究哪种控制系统，再了解它的功能、早期形式和经历的发展变化。资料要能支持这些比较；仅凭外观、名称或广告不能完成探究。'}
 ];
+const finalAssessment=[
+ {
+  "id": "deviceFunction",
+  "group": 0,
+  "label": "功能与模式",
+  "prompt": "清洗后的布片仍有很多水。希望减少水分而不重复清洗，哪种方案更符合需要？",
+  "options": [
+   "启动洗衣机，执行完整标准清洗",
+   "启动洗衣机，选择脱水",
+   "只让洗衣机通电，保留原来的清洗模式"
+  ],
+  "correct": 1,
+  "explanation": "需要改变的是布片含水量。设备通电后，还要选择符合需求的功能。",
+  "source": "教材第12页"
+ },
+ {
+  "id": "controlNeed",
+  "group": 0,
+  "label": "比较控制效果",
+  "prompt": "同一风力机关中，强气流能推动叶轮，却把轻羽片吹出了轨道。这说明什么？",
+  "options": [
+   "控制方法要随对象和期望效果调整",
+   "应该给羽片和叶轮使用同一个设置",
+   "风力机关只需看设备有没有通电"
+  ],
+  "correct": 0,
+  "explanation": "对象和任务不同，对气流的需求就可能不同。要根据观察结果选择设置。",
+  "source": "教材第11—12页"
+ },
+ {
+  "id": "controlTime",
+  "group": 0,
+  "label": "把时间要求转为控制",
+  "prompt": "模拟装置在10:05开始运行，到10:20需要自行停止。哪种设置能满足工作时长的需要？",
+  "options": [
+   "工作20分钟后停止",
+   "一直运行，等人回来再关",
+   "工作15分钟后停止"
+  ],
+  "correct": 2,
+  "explanation": "从10:05到10:20经过15分钟，定时设置对应的是运行时长。",
+  "source": "教材第12页定时功能迁移"
+ },
+ {
+  "id": "observeResult",
+  "group": 0,
+  "label": "有依据地改进",
+  "prompt": "投影启动后，幕布上的图案仍不清楚。哪种做法更有助于找到原因？",
+  "options": [
+   "换一台洗衣机再观察幕布",
+   "改变一个相关环境条件，再比较图案清晰度",
+   "只看电源指示灯，不再观察图案"
+  ],
+  "correct": 1,
+  "explanation": "先明确需要的功能效果，再通过改变相关条件与前后比较验证，而不只看是否通电。",
+  "source": "教材第11页"
+ },
+ {
+  "id": "publicDevice",
+  "group": 1,
+  "label": "夜间公共服务",
+  "prompt": "夜里行人看不清路面，但路口通行顺序正常。最直接相关的设备是哪个？",
+  "options": [
+   "路灯",
+   "收费扫码机",
+   "车辆导航软件"
+  ],
+  "correct": 0,
+  "explanation": "此处需要提供照明。信号、收费、导航与照明提供的服务不同。",
+  "source": "教材第13页"
+ },
+ {
+  "id": "controlSystem",
+  "group": 1,
+  "label": "普通设备也是系统",
+  "prompt": "一台没有联网的普通电风扇能按按钮改变风速。在本课的学习阶段，应怎样看待它？",
+  "options": [
+   "只有联网后才可能成为控制系统",
+   "只有自动运行、不用人操作才属于控制系统",
+   "它也可以看作按一定规则实现功能的控制系统"
+  ],
+  "correct": 2,
+  "explanation": "本课从功能和运行认识控制系统，不以是否联网、是否全自动作为唯一条件。",
+  "source": "教材第13页"
+ },
+ {
+  "id": "unseenDevice",
+  "group": 1,
+  "label": "眼前以外的设备",
+  "prompt": "驾驶员用手机导航到达目的地。除了眼前的手机，还可能有哪些设备在提供服务？",
+  "options": [
+   "只有屏幕内看得见的设备",
+   "导航卫星等不在眼前的设备",
+   "沿途所有家用电饭锅"
+  ],
+  "correct": 1,
+  "explanation": "教材以北斗卫星导航系统提示：一些保障功能的设备并不直接出现在眼前。",
+  "source": "教材第13页教师提示"
+ },
+ {
+  "id": "sameDevice",
+  "group": 1,
+  "label": "方法不同，功能相近",
+  "prompt": "两家的电风扇一台用旋钮，一台用遥控器，都能改变风速。比较它们时，哪种记录更准确？",
+  "options": [
+   "只记录面板颜色",
+   "认为控制方法不同就不能比较功能",
+   "分别记录控制方法，并比较实现的风速变化"
+  ],
+  "correct": 2,
+  "explanation": "控制方法可能因设备型号而不同，分析应同时关注功能与实际操作。",
+  "source": "教材第12页功能分析表"
+ },
+ {
+  "id": "earlyForm",
+  "group": 2,
+  "label": "早期设备解决的需要",
+  "prompt": "阅读早期设备档案。井水在地下，人们需要将它提到地面。与这一需要直接对应的设备是哪个？",
+  "options": [
+   "辘轳",
+   "弓弩",
+   "内燃机"
+  ],
+  "correct": 0,
+  "explanation": "教材举出辘轳的取水用途，体现早期设备服务生产生活的需要。",
+  "source": "教材第14页拓展与提升"
+ },
+ {
+  "id": "evolution",
+  "group": 2,
+  "label": "变化与延续",
+  "prompt": "从用机械钥匙开锁，到采用密码等方式开锁，哪项比较抓住了“功能”和“控制方法”？",
+  "options": [
+   "基本开门功能消失，变成了全新的用途",
+   "基本开门功能保留，控制方式发生变化",
+   "只是门的颜色改变，控制方式没有变化"
+  ],
+  "correct": 1,
+  "explanation": "功能与控制方式应分开比较。形式发展并不意味着原有基本功能消失。",
+  "source": "教材第14页门锁案例"
+ },
+ {
+  "id": "coexist",
+  "group": 2,
+  "label": "新旧设备可以并存",
+  "prompt": "参观时发现有些门用机械锁，有些门用智能锁。由这个现象可以得到什么认识？",
+  "options": [
+   "使用机械锁说明设备没有功能",
+   "智能锁出现后机械锁应该立即停用",
+   "新旧形式可以并存，选择还要看实际需要"
+  ],
+  "correct": 2,
+  "explanation": "教材明确指出早期形式仍在使用，多种形式并存也能体现发展演变。",
+  "source": "教材第14页教师提示"
+ },
+ {
+  "id": "progress",
+  "group": 2,
+  "label": "科技进步的价值",
+  "prompt": "比较两种门锁，哪项观察最能帮助说明控制方式的发展给使用者带来的变化？",
+  "options": [
+   "开锁方式怎样变化，给使用带来什么便利和条件",
+   "外壳哪种颜色更亮",
+   "产品名字哪一个更长"
+  ],
+  "correct": 0,
+  "explanation": "要把技术发展与控制方法、功能及使用者需要联系起来。",
+  "source": "教材第14页问题探究表"
+ },
+ {
+  "id": "inquiryPlan",
+  "group": 3,
+  "label": "设计调查问题",
+  "prompt": "想研究一种自动感应冲水装置的发展，哪组问题更符合教材的问题探究表？",
+  "options": [
+   "广告用了几张图片、包装有多大",
+   "它做什么、早期怎样实现、控制方式怎样变化",
+   "哪款外观最好看、名字最流行"
+  ],
+  "correct": 1,
+  "explanation": "问题探究表关注研究对象、功能、早期形式与发展变化。",
+  "source": "教材第14页问题探究表"
+ },
+ {
+  "id": "investigationEvidence",
+  "group": 3,
+  "label": "用证据支持档案",
+  "prompt": "同伴说“新门锁一定在所有场景下都更方便”。你准备怎样检查这个结论？",
+  "options": [
+   "先赞同同伴，再寻找同一说法的广告",
+   "只比较两个门锁的价格",
+   "比较具体开锁过程、不同使用者需求和使用条件"
+  ],
+  "correct": 2,
+  "explanation": "“所有场景”需要充分证据。比较具体操作与适用条件，比凭名称判断更有依据。",
+  "source": "教材第14页开放探究迁移"
+ },
+ {
+  "id": "oldSystems",
+  "group": 3,
+  "label": "认识早期形式",
+  "prompt": "教材把辘轳、弓弩、内燃机等作为早期形式的例子。这提醒我们怎样看待控制系统的发展？",
+  "options": [
+   "人们很早就在创造设备解决需要，后来继续改进",
+   "只有电脑普及后才出现用于解决需要的设备",
+   "早期设备与人的生产生活没有关系"
+  ],
+  "correct": 0,
+  "explanation": "本课从早期设备到现代控制系统，体会设备持续改善生产和生活条件。",
+  "source": "教材第14页"
+ },
+ {
+  "id": "transferPlan",
+  "group": 3,
+  "label": "面对新设备",
+  "prompt": "遇到一台按钮布局不同的新设备，你要完成已知任务。哪种方案更合理？",
+  "options": [
+   "原样照搬另一台设备的按钮位置",
+   "先明确所需功能，了解控制方法，再观察是否达到效果",
+   "把所有模式依次启动，不比较结果"
+  ],
+  "correct": 1,
+  "explanation": "学习的是根据需要选择控制方法并验证结果，可以迁移到不同设备。",
+  "source": "教材第11—14页综合应用"
+ }
+];
+const transferOptions={
+ transferDevice:['照明灯','电风扇','洗衣机','电饭锅','路灯'],
+ transferFunction:['提供照明','促进空气流动','完成脱水','煮粥','提供夜间照明'],
+ transferMethod:['按开关','打开电源并选择风速','开启电源并选择模式','按照明开关','观察设备结果后再调整'],
+ transferEvidence:['观察房间是否变亮','观察气流是否让机关移动','观察设备是否执行所需模式','观察是否按时停止','观察街道是否变亮']
+};
 function scoreAssessment(answers={}){
  const details=finalAssessment.map(item=>({id:item.id,correct:answers[item.id]===item.correct}));
  const score=details.filter(item=>item.correct).length;
- const transferKeys=['transferDevice','transferFunction','transferMethod','transferEvidence'];
- const transferComplete=transferKeys.every(key=>typeof answers[key]==='string'&&answers[key].trim());
- const transfer=transferComplete?{complete:true,sentence:`我会控制${answers.transferDevice}，让它${answers.transferFunction}。我会${answers.transferMethod}，并通过${answers.transferEvidence}判断是否成功。`}:{complete:false,sentence:''};
- const ready=details.every(item=>answers[item.id]!==undefined)&&transfer.complete;
- return {ready,complete:details.every(item=>item.correct)&&transfer.complete,score,max:finalAssessment.length,details,transfer};
+ const transferKeys=Object.keys(transferOptions);
+ const transferComplete=transferKeys.every(key=>transferOptions[key].includes(answers[key]));
+ const matches={
+  '照明灯':{function:'提供照明',alternatives:['提供夜间照明'],methods:['按开关','按照明开关'],evidence:'观察房间是否变亮'},
+  '电风扇':{function:'促进空气流动',methods:['打开电源并选择风速','按开关'],evidence:'观察气流是否让机关移动'},
+  '洗衣机':{function:'完成脱水',methods:['开启电源并选择模式'],evidence:'观察设备是否执行所需模式'},
+  '电饭锅':{function:'煮粥',methods:['开启电源并选择模式'],evidence:'观察设备是否执行所需模式'},
+  '路灯':{function:'提供夜间照明',alternatives:['提供照明'],methods:['按开关','按照明开关'],evidence:'观察街道是否变亮'}
+ };
+ const model=matches[answers.transferDevice];
+ const correct=Boolean(transferComplete&&model&&(model.function===answers.transferFunction||(model.alternatives||[]).includes(answers.transferFunction))&&model.methods.includes(answers.transferMethod)&&model.evidence===answers.transferEvidence);
+ const transfer={complete:transferComplete,correct,sentence:transferComplete?'我会控制'+answers.transferDevice+'，让它'+answers.transferFunction+'。我会'+answers.transferMethod+'，并通过'+answers.transferEvidence+'判断是否成功。':''};
+ const ready=finalAssessment.every(item=>Number.isInteger(answers[item.id])&&answers[item.id]>=0&&answers[item.id]<item.options.length)&&transfer.complete;
+ return {ready,complete:ready&&score===finalAssessment.length&&correct,score,max:finalAssessment.length,details,transfer};
 }
 function check(r,s,c){
  const yes=()=>({ok:true,text:rooms[r].tasks[s].effect});
  const no=text=>({ok:false,text});
  if(r===0||r===5){
-  if(s===0&&r===0)return c.lamp?yes():no('房间仍然昏暗。照明灯还没有打开，试试照明开关。');
-  if(s===(r===0?1:0))return !c.projector?no('投影还没启动，幕布上没有影像。'):!c.curtain?no('窗外光线仍在影响观看，试着合上窗帘。'):c.lamp?no('照明灯仍然亮着，调整照明再观察。'):yes();
-  if(s===2)return !c.audio?no('播放器尚未播放。先开启播放。'):c.volume!==(r===0?2:1)?no(`播放器已启动，但任务要求音量 ${r===0?2:1} 格。`):yes();
+  if(s===0&&r===0)return c.lamp?yes():no('房间仍然昏暗，笔记上的细字难以辨认。');
+  if(s===(r===0?1:0))return !c.projector?no('幕布上没有影像。环境变暗也没有使图案出现。'):!c.curtain?no('幕布已有图案，但窗外的光线使细线难以辨认。'):c.lamp?no('图案已经出现，室内光照仍使图案显得较淡。'):yes();
+  if(s===2){
+   if(!c.audio||c.volume===0)return no('接收端没有听到声音，提示尚未被听见。');
+   if(r===0&&c.volume===1)return no('近处能听见，房间另一端的接收器仍辨认不清。');
+   if((r===0&&c.volume===3)||(r===5&&c.volume>1))return no('声音可以听见，但过响的提示打扰了旁边的人。');
+   return yes();
+  }
  }
  if(r===1||(r===5&&s===1)){
   const target=r===5?2:s===0?3:1;
-  if(!c.fan)return no('风扇没有运行，请打开电源。');
-  if(c.speed!==target)return no(`风扇在 ${c.speed} 挡。观察任务需要：本次需要 ${target} 挡。`);
-  if((s===2||r===5)&&c.timer!==30)return no(`定时为 ${c.timer||'未设置'}${c.timer?'分钟':''}，还不能在任务要求的30分钟后停止。`);
+  if(!c.fan||c.speed===0)return no('没有形成推动机关的气流，机关保持原位。');
+  if(c.speed!==target){
+   if(r===5)return no(c.speed<target?'钥匙只晃动了一下，没有被送入接收区。':'钥匙越过了接收区，气流把它推得太远。');
+   return no(s===0?'叶轮转动缓慢，仍不足以带动门闩。':'羽片被气流吹出了托举区，无法保持稳定。');
+  }
+  if((s===2||r===5)&&c.timer!==30){
+   return no(c.timer===0?'模拟到约定时刻，气流仍没有自行停止。':c.timer<30?'装置提前停下，队员还未到约定的交接时刻。':'约定时刻已到，装置还在继续工作。');
+  }
   return yes();
  }
- if(r===2){const dev=s===2?'cooker':'washer',mode=s===2?'煮粥':s===1?'快洗':'脱水';return !c[dev]?no('设备还未启动，先检查相应电源。'):c[s===2?'cmode':'wmode']!==mode?no(`设备已启动，但模式不符合任务。本次需要“${mode}”。`):yes();}
- if(r===3){const roles=['驾驶员','交通管理部门','城市管理部门'];if(c.role!==roles[s])return no(`先想一想：谁负责这项工作？本任务由${roles[s]}控制相应设备。`);return (s===0?c.vehicle:s===1?c.signal==='东西通行':c.street)?yes():no(['车辆还未启动。','信号状态还不符合东西方向通行的要求。','路灯还未打开，夜间照明任务未完成。'][s]);}
- if(r===4)return (s===0?c.key==='齿形钥匙'&&c.oldOpen:s===1?c.code==='246'&&c.smartOpen:c.evolution==='控制方法改变，开门功能保留')?yes():no(['需要匹配的齿形钥匙，并实际转动钥匙。','输入246后，还要按验证开锁；输错可以清除重来。','回想两种操作：开门的基本功能保留，控制方法发生了变化。'][s]);
+ if(r===2){
+  if(s<2){
+   if(!c.washer)return no('设备没有开始运行，布片状态没有变化。');
+   if(c.wmode!==(s===0?'脱水':'快洗')){
+    if(c.wmode==='未选择')return no('指示灯亮起，但没有工作程序开始。');
+    if(c.wmode==='脱水')return no('设备去掉了部分水分，却没有完成这批布片所需的清洗。');
+    return no(s===0?'设备又开始清洗已经干净的布片，重复了不需要的过程。':'清洗程序开始了，但占用时间较长，与赶时间的需要不符。');
+   }
+  }else{
+   if(!c.cooker)return no('食材还没有开始加热。');
+   if(c.cmode!=='煮粥')return no(c.cmode==='保温'?'设备只在维持温度，没有开始处理未熟的食材。':c.cmode==='煮饭'?'模拟成品较干，和需要汤水、软烂米粒的早餐不同。':'设备通电了，但还没有开始制作早餐的程序。');
+  }
+  return yes();
+ }
+ if(r===3){
+  const roles=['驾驶员','交通管理部门','城市管理部门'];
+  if(c.role!==roles[s])return no('调度申请没有执行：当前角色的职责与这项公共服务不相符。');
+  return (s===0?c.vehicle:s===1?c.signal==='东西通行':c.street)?yes():no(['物资车仍停在出发点，没有前往目的地。','东西方向的队伍仍在等待，没有按此次安排通过路口。','道路仍然昏暗，行人看不清路面。'][s]);
+ }
+ if(r===4)return (s===0?c.key==='齿形钥匙'&&c.oldOpen:s===1?c.code==='246'&&c.smartOpen:c.evolution==='控制方法改变，开门功能保留')?yes():no(['锁芯没有带动锁舌收回。检查外形是否匹配，以及工具是否真正带动了锁芯。','锁舌没有收回。刻字内容、排列顺序和验证是否都已考虑？','这份记录还没有把“解决什么需要”和“怎样操作”分开比较。'][s]);
  return no('请回到当前任务重新观察。');
 }
-return {rooms,initial,check,finalAssessment,scoreAssessment};
+return {rooms,initial,check,finalAssessment,scoreAssessment,transferOptions,assessmentGroups,extensionMaterials};
 })();
 if(typeof module!=='undefined')module.exports=EscapeCore;
 
 (() => {
 'use strict';
-const {rooms,initial,check,finalAssessment,scoreAssessment}=EscapeCore;
+const {rooms,initial,check,finalAssessment,scoreAssessment,transferOptions,assessmentGroups,extensionMaterials}=EscapeCore;
 const STORAGE='device-escape-v1';
 const $=s=>document.querySelector(s);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fresh=()=>({version:1,started:false,finished:false,room:0,steps:[0,0,0,0,0,0],passed:[false,false,false,false,false,false],controls:rooms.map(initial),attempts:[],answers:[],discoveries:[],hints:[0,0,0,0,0,0],predictions:['','','','','',''],pending:[false,false,false,false,false,false],name:'',reflection:'',assessment:{answers:{},submitted:false},challenge:null,elapsed:0,reduced:false,sound:false});
+const fresh=()=>({version:1,started:false,finished:false,room:0,steps:[0,0,0,0,0,0],passed:[false,false,false,false,false,false],controls:rooms.map(initial),attempts:[],answers:[],discoveries:[],hints:[0,0,0,0,0,0],taskHints:rooms.map(()=>[0,0,0]),predictions:['','','','','',''],pending:[false,false,false,false,false,false],name:'',reflection:'',assessment:{version:2,answers:{},submitted:false,page:0,firstAttempt:null,submissions:0},challenge:null,elapsed:0,reduced:false,sound:false});
 let state=fresh(),storageOK=true,feedback=null,pending=false,busy=false,toastTimer,audioContext;
 try{const data=JSON.parse(localStorage.getItem(STORAGE)||'null');if(data&&data.version===1&&Array.isArray(data.steps)&&data.steps.length===6&&data.steps.every(n=>Number.isInteger(n)&&n>=0&&n<=3)&&Array.isArray(data.passed)&&data.passed.length===6&&data.passed.every(n=>typeof n==='boolean')&&Array.isArray(data.controls)&&data.controls.length===6&&data.controls.every(c=>c&&typeof c==='object')&&Number.isInteger(data.room)&&data.room>=0&&data.room<6&&['attempts','answers','discoveries','hints','predictions'].every(k=>Array.isArray(data[k]))){state={...fresh(),...data};state.controls=state.controls.map(c=>({...initial(),...c}));}}catch(e){storageOK=false;}
 pending=!!state.pending?.[state.room];
@@ -106,7 +374,7 @@ const minutes=()=>Math.floor(state.elapsed/60);
 function top(){return `<header class="topbar"><div class="brand"><span class="brand-logo">◈</span><span>机关密室<small>THE CONTROL CHAMBERS</small></span></div><nav class="toolbar" aria-label="工具"><button class="plain" data-action="notebook">线索簿</button><button class="plain mobile-hide" data-action="sound" aria-pressed="${state.sound}">声音${state.sound?'开':'关'}</button><button class="plain optional" data-action="motion" aria-pressed="${state.reduced}">${state.reduced?'恢复动画':'减少动态'}</button></nav></header>`;}
 function footer(){return `<footer class="footer"><span>六年级信息科技 · 第1课 设备控制处处在</span><span>${storageOK?'进度保存在当前浏览器':'进度保存不可用，请及时导出'} · 无需登录</span></footer>`;}
 function render(focusKey){document.body.classList.toggle('reduced',state.reduced);$('#app').innerHTML=`<div class="wrap">${top()}${!storageOK?'<div class="save-warning">当前浏览器不能保存进度。请使用线索簿导出记录，刷新可能丢失进度。</div>':''}${!state.started?landing():state.finished?finish():game()}${footer()}</div>`;if(focusKey){const el=document.querySelector(`[data-focus="${focusKey}"]`);el?.focus({preventScroll:true});}}
-function landing(){return `<section class="landing"><div class="hero-copy"><span class="pill"><i class="dot"></i> 一场靠观察与操作完成的冒险</span><h1>机关密室<em>设备控制逃脱行动</em></h1><p>五枚晶石，六道机关。<br>和探险搭档一起，唤醒沉睡的设备。<br>每一次控制，都藏着打开出口的线索。</p><button class="primary" data-action="start">进入密室 <span aria-hidden="true">→</span></button><div class="hero-meta"><span>◷ 约25—30分钟</span><span>⌘ 点击操作</span><span>♧ 支持双人合作</span></div><p style="font-size:12px;margin:20px 0 0">没有倒计时惩罚。可以尝试，也可以求助。<br>建议一人操作、一人观察，每间密室交换角色。</p></div><div class="cover-caption"><b>阿澄 × 小屿 × 机械向导</b>找到设备 · 观察变化 · 收集线索</div></section><div class="journey">${rooms.map((r,i)=>`<div class="preview"><div class="thumb" style="background-position:${(i%3)*50}% ${i<3?0:100}%"></div><div><b>${String(i+1).padStart(2,'0')} ${r.name.replace('终局 · ','')}</b><small>${i===5?'运用线索，打开出口':r.key+' · 等待发现'}</small></div></div>`).join('')}</div>`;}
+function landing(){return `<section class="landing"><div class="hero-copy"><span class="pill"><i class="dot"></i> 一场靠观察与操作完成的冒险</span><h1>机关密室<em>设备控制逃脱行动</em></h1><p>五枚晶石，六道机关。<br>和探险搭档一起，唤醒沉睡的设备。<br>每一次控制，都藏着打开出口的线索。</p><button class="primary" data-action="start">进入密室 <span aria-hidden="true">→</span></button><div class="hero-meta"><span>◷ 自主探索 · 随时保存</span><span>⌘ 点击操作</span><span>♧ 支持双人合作</span></div><p style="font-size:12px;margin:20px 0 0">没有倒计时惩罚。可以尝试，也可以求助。<br>建议一人操作、一人观察，每间密室交换角色。</p></div><div class="cover-caption"><b>阿澄 × 小屿 × 机械向导</b>找到设备 · 观察变化 · 收集线索</div></section><div class="journey">${rooms.map((r,i)=>`<div class="preview"><div class="thumb" style="background-position:${(i%3)*50}% ${i<3?0:100}%"></div><div><b>${String(i+1).padStart(2,'0')} ${r.name.replace('终局 · ','')}</b><small>${i===5?'运用线索，打开出口':r.key+' · 等待发现'}</small></div></div>`).join('')}</div>`;}
 function game(){const r=rooms[state.room],s=state.steps[state.room],count=state.passed.filter(Boolean).length;return `<div class="game-heading"><div><div class="eyebrow">CHAMBER ${String(state.room+1).padStart(2,'0')} / 06 · ${r.tag}</div><h1>${r.name}</h1></div><div class="progress-overview"><span class="muted">已取证 ${count} / 6 间</span><div class="progress-line"><span style="width:${count/6*100}%"></span></div></div></div><div class="game-layout"><nav class="room-nav" aria-label="密室路线">${rooms.map((x,i)=>`<button class="room-btn ${i===state.room?'active':''} ${state.passed[i]?'done':''}" data-action="room" data-room="${i}" ${i>0&&!state.passed[i-1]?'disabled':''} ${i===state.room?'aria-current="step"':''} aria-label="第${i+1}间 ${x.name}${i>0&&!state.passed[i-1]?' 未解锁':''}"><span class="nav-icon">${x.icon}</span>${['光影','风力','模式','城市','时间','出口'][i]}</button>`).join('')}</nav><div class="stage-col">${scene()}<div class="guide"><span class="avatar" aria-hidden="true"></span><div><b>机械向导 · 小序</b><p>${s===0&&!pending?r.intro:state.passed[state.room]?'这里的控制线索已经记录好了。你可以继续探索，或者前往下一间。':s===3?'机关响应正确！再解释一次你的发现，就能取得晶石。':'观察设备的反应：它实现了你需要的功能吗？想好后，再启动试运行。'}</p></div></div></div><aside class="task-panel" aria-label="当前任务与控制面板">${state.passed[state.room]?collected():s>=3?question():taskPanel()}</aside></div><div class="clue-tray"><div><div class="eyebrow">YOUR EVIDENCE</div><b>控制线索 · 晶石槽</b></div><div class="clue-slots">${rooms.slice(0,5).map((x,i)=>`<span class="crystal ${state.passed[i]?'collected':''}" title="${state.passed[i]?x.key:'尚未获得'+x.key}" aria-label="${state.passed[i]?'已获得':'未获得'}${x.key}">${state.passed[i]?x.icon:'·'}</span>`).join('')}</div><button class="plain" data-action="notebook">查看线索簿 ↗</button></div>`;}
 const switcher=(key,label)=>`<div class="toggle-row"><span>${label}</span><button class="switch" role="switch" aria-label="${label}" aria-checked="${!!state.controls[state.room][key]}" data-action="toggle" data-key="${key}" data-focus="${key}"></button></div>`;
 function choices(key,label,values){return `<div class="control-group"><span class="control-label">${label}</span><div class="choices">${values.map(v=>{const [value,text]=Array.isArray(v)?v:[v,String(v)];return `<button type="button" data-action="set" data-key="${key}" data-value="${esc(value)}" data-number="${typeof value==='number'}" data-focus="${key}-${esc(value)}" class="${state.controls[state.room][key]===value?'selected':''}" aria-pressed="${state.controls[state.room][key]===value}">${esc(text)}</button>`;}).join('')}</div></div>`;}
@@ -115,11 +383,19 @@ function controls(){const r=state.room,s=state.steps[r];
  if(r===1||r===5)return `${switcher('fan','风扇电源')}<div style="height:12px"></div>${choices('speed','风速 / 挡',[[0,'停风'],[1,'1 · 轻风'],[2,'2 · 中风'],[3,'3 · 强风']])}${choices('timer','定时停止 / 分钟',[[0,'不定时'],15,30,60])}<p class="note">试运行会快进定时过程。风扇促进空气流动。</p>`;
  if(r===2)return s<2?`${switcher('washer','洗衣机电源')}<div style="height:12px"></div>${choices('wmode','洗衣机模式',['快洗','脱水','标准'])}<p class="note">课堂模拟面板；不同型号的实际操作可能不同。</p>`:`${switcher('cooker','电饭锅电源')}<div style="height:12px"></div>${choices('cmode','电饭锅模式',['煮饭','煮粥','保温'])}<p class="note">只进行屏幕模拟，不操作真实加热设备。</p>`;
  if(r===3)return `${choices('role','谁在控制设备？',['驾驶员','交通管理部门','城市管理部门'])}${s===0?switcher('vehicle','启动模拟车辆'):s===1?choices('signal','模拟信号状态',['全部停止','东西通行','南北通行']):switcher('street','路灯')}<p class="note">本舱仅模拟公共设备；真实设备由相应人员管理。</p>`;
- if(r===4){const c=state.controls[r];if(s===0)return `${choices('key','锁孔提示：匹配齿形钥匙',['圆头钥匙','齿形钥匙','方头钥匙'])}<button data-action="old-lock" data-focus="old-lock" class="run">转动钥匙</button><p class="note">锁的状态：${c.oldOpen?'已经打开':'尚未打开'}</p>`;
+ if(r===4){const c=state.controls[r];if(s===0)return `${choices('key','锁芯凹槽高低起伏，观察钥匙外形',['圆头钥匙','齿形钥匙','方头钥匙'])}<button data-action="old-lock" data-focus="old-lock" class="run">转动钥匙</button><p class="note">锁的状态：${c.oldOpen?'已经打开':'尚未打开'}</p>`;
  if(s===1)return `<p class="note">密码线索：按获得顺序，组合<b>前三枚晶石上的数字</b>。打开顶部“线索簿”查看。</p><div class="code-display" aria-label="已输入密码">${esc(c.code||'— — —')}</div><div class="keypad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-action="digit" data-focus="digit-${n}" data-digit="${n}" aria-label="密码数字${n}">${n}</button>`).join('')}</div><div class="digit-action"><button data-action="clear-code" data-focus="clear-code">清除</button><button data-action="smart-lock" data-focus="smart-lock">验证开锁</button></div><p class="note">锁的状态：${c.smartOpen?'已经打开':'尚未打开'}</p>`;
  return choices('evolution','选择发展档案中的结论',['所有功能都改变了','控制方法改变，开门功能保留','两种锁的控制方法完全相同']);}
  return '';}
-function taskPanel(){const r=rooms[state.room],s=state.steps[state.room],t=r.tasks[s];return `<div class="task-head"><div class="eyebrow">机关任务 ${s+1} / 3</div><h2>${t.title}</h2><p>${t.goal}</p><div class="step-track">${[0,1,2].map(i=>`<i class="${i<s?'done':i===s?'current':''}"></i>`).join('')}</div></div><div class="panel-body"><fieldset class="control-set" ${busy||pending?'disabled':''}>${controls()}<div class="prediction"><label class="control-label" for="prediction">试运行前，预测会发生什么</label><select id="prediction"><option value="">选择你的预测…</option>${[t.expect,'设备没有实现任务需要的变化','还不确定，先试验再比较'].map(x=>`<option value="${esc(x)}" ${state.predictions[state.room]===x?'selected':''}>${x}</option>`).join('')}</select></div></fieldset>${feedbackHTML()}${pending?'<button class="primary run" data-action="next-step">记录发现，继续 →</button>':`<button class="primary run" data-action="run" ${busy?'disabled':''}>${busy?'正在试运行…':'▷ 启动试运行'}</button>`}<button class="hint-btn" data-action="hint" data-focus="hint" ${busy?'disabled':''}>✧ ${state.hints[state.room]?'再给我一点提示':'需要一点提示'} (${Math.min(state.hints[state.room],3)}/3)</button>${state.hints[state.room]?`<div class="hint-box">${r.hints[Math.min(state.hints[state.room]-1,2)]}</div>`:''}</div>`;}
+function currentHintCount(){
+ if(!Array.isArray(state.taskHints)||state.taskHints.length!==6)state.taskHints=rooms.map(()=>[0,0,0]);
+ if(!Array.isArray(state.taskHints[state.room]))state.taskHints[state.room]=[0,0,0];
+ return Math.min(3,Math.max(0,Number(state.taskHints[state.room][state.steps[state.room]])||0));
+}
+function taskPanel(){
+ const r=rooms[state.room],s=state.steps[state.room],t=r.tasks[s],hintCount=currentHintCount();
+ return `<div class="task-head"><div class="eyebrow">情境任务 ${s+1} / 3</div><h2>${t.title}</h2><p>${t.goal}</p><div class="step-track">${[0,1,2].map(i=>`<i class="${i<s?'done':i===s?'current':''}"></i>`).join('')}</div></div><div class="panel-body"><fieldset class="control-set" ${busy||pending?'disabled':''}>${controls()}<div class="prediction"><label class="control-label" for="prediction">按现在的设置，预测会发生什么</label><select id="prediction"><option value="">选择你的预测…</option>${[t.expect,'设备没有实现任务需要的变化','还不确定，先试验再比较'].map(x=>`<option value="${esc(x)}" ${state.predictions[state.room]===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div></fieldset>${feedbackHTML()}${pending?'<button class="primary run" data-action="next-step">记录发现，继续 →</button>':`<button class="primary run" data-action="run" ${busy?'disabled':''}>${busy?'正在试运行…':'▷ 启动试运行'}</button>`}<button class="hint-btn" data-action="hint" data-focus="hint" ${busy?'disabled':''}>✧ ${hintCount===0?'观察提示':hintCount===1?'再给我一个思考方向':'查看具体操作帮助'}（${hintCount}/3）</button>${hintCount?`<div class="hint-box"><b>${['观察线索','思考方向','具体操作帮助'][hintCount-1]}</b><br>${t.hints[hintCount-1]}</div>`:''}</div>`;
+}
 function feedbackHTML(){return feedback?`<div class="feedback ${feedback.ok?'success':''}" role="status"><strong>${feedback.ok?'✓ 机关回应了':'观察结果'}</strong>${esc(feedback.text)}</div>`:'';}
 function question(){const q=rooms[state.room].question;return `<div class="question"><div class="eyebrow">线索取证 · 解释你的发现</div><h3>${q.title}</h3><p class="muted" style="font-size:12px">把操作与原因连起来，晶石才会点亮。</p>${q.options.map((x,i)=>`<button class="answer" data-action="answer" data-focus="answer-${i}" data-answer="${i}">${String.fromCharCode(65+i)}. ${x}</button>`).join('')}${feedbackHTML()}</div>`;}
 function collected(){const r=rooms[state.room];return `<div class="complete-panel"><div class="eyebrow">EVIDENCE COLLECTED</div><div class="key-display">${r.icon}</div><h2>${state.room===5?'出口已开启！':'获得'+r.key}</h2><p>${r.question.explain}</p>${state.room<3?`<div class="feedback success">晶石背面刻着 <b>${[2,4,6][state.room]}</b>。已收进线索簿，时间锁会用到。</div>`:""}<button class="primary run" data-action="next-room" data-focus="next-room">${state.room===5?'查看我的闯关成果':'前往下一间密室 →'}</button><button class="plain run" data-action="notebook">查看本次操作记录</button></div>`;}
@@ -131,10 +407,10 @@ function speaker(c){return `<div class="device">${svg(`<rect x="57" y="32" width
 function washer(c){return `<div class="device">${svg(`<rect x="39" y="20" width="162" height="207" rx="16" fill="url(#case)" stroke="url(#metal)" stroke-width="4"/><rect x="52" y="34" width="136" height="40" rx="6" fill="#102e35"/><circle cx="74" cy="54" r="12" fill="url(#metal)"/><text x="97" y="59" font-size="13" fill="#bcf0d5">${c.washer?c.wmode:'未启动'}</text><circle cx="120" cy="141" r="59" fill="#bda475"/><circle cx="120" cy="141" r="50" fill="url(#glass)" stroke="#233c40" stroke-width="6"/><g class="${c.washer&&c.wmode!=='未选择'?'spinner':''}" style="--spin:${c.wmode==='脱水'?'.6':'2'}s"><path d="M83 127q38-40 70 11q-26 48-63 35z" fill="#c2d4bf" opacity=".85"/><path d="M118 99l35 34-22 18-39-22z" fill="#d9b682"/></g><path d="M78 110q-14 45 12 69" stroke="#deefe1" stroke-width="3" opacity=".5" fill="none"/><circle cx="184" cy="136" r="6" fill="url(#metal)"/>`)}<span class="device-label">洗衣机 · ${c.washer?c.wmode:'已关闭'}</span></div>`;}
 function cooker(c){return `<div class="device">${svg(`${c.cooker?'<g class="steam" stroke="#fff4dd" fill="none" stroke-width="4" opacity=".6"><path d="M100 60q-10-20 0-35M122 60q-10-20 0-35M144 60q-10-20 0-35"/></g>':''}<path d="M59 100Q40 235 120 229q80 6 61-129z" fill="url(#case)" stroke="url(#metal)" stroke-width="4"/><ellipse cx="120" cy="100" rx="70" ry="24" fill="url(#metal)"/><ellipse cx="120" cy="94" rx="59" ry="18" fill="url(#case)"/><path d="M100 82V65q20-17 40 0v17" fill="none" stroke="#dbc291" stroke-width="9"/><rect x="83" y="151" width="75" height="37" rx="7" fill="#102e35" stroke="#668b7f"/><text x="120" y="175" text-anchor="middle" fill="#b8f3d6" font-size="14">${c.cooker?c.cmode:'未启动'}</text><path d="M55 129H36v26h18M185 129h19v26h-19" stroke="#b39966" stroke-width="6" fill="none"/>`)}<span class="device-label">电饭锅 · ${c.cooker?c.cmode:'已关闭'}</span></div>`;}
 function city(c){return `<div class="device" style="width:100%">${svg(`<rect x="10" y="25" width="460" height="190" rx="20" fill="#15353c" stroke="url(#metal)" stroke-width="3"/><rect x="190" y="30" width="100" height="180" fill="#586b68"/><path d="M15 90h450v65H15Z" fill="#586b68"/><path d="M235 35v160M20 123h435" stroke="#d6d2ad" stroke-width="2" stroke-dasharray="13 9"/>${[0,1,2,3].map(i=>`<path d="M${172+i*7} 94v56M${296+i*7} 94v56" stroke="#e4e3ca" stroke-width="4"/>`).join('')}<g class="${(state.steps[state.room]===0?c.vehicle:c.signal==='东西通行')?'moving-car':''}"><rect x="40" y="111" width="60" height="25" rx="8" fill="#e8c785"/><rect x="57" y="114" width="22" height="19" rx="3" fill="#244651"/></g><rect x="309" y="45" width="29" height="52" rx="7" fill="#17282b" stroke="#baa279"/><circle cx="323" cy="59" r="7" fill="${c.signal==='东西通行'?'#494c3e':'#fb9378'}"/><circle cx="323" cy="81" r="7" fill="${c.signal==='东西通行'?'#a7ebbd':'#404d45'}"/><path d="M324 97v27" stroke="#a28b65" stroke-width="5"/><path d="M384 66v123M375 69q9-25 18 0Z" stroke="#ac925b" fill="${c.street?'#ffe6a2':'#5c756a'}" stroke-width="4"/>${c.street?'<ellipse cx="384" cy="183" rx="46" ry="13" fill="#ffe4a8" opacity=".5"/>':''}<text x="33" y="193" fill="#c7e2d8" font-size="14">${esc(c.role==='未选择'?'选择控制者，再操作设备':c.role)}</text>`,480,240)}<span class="device-label">街道模拟台 · ${c.signal}</span></div>`;}
-function locks(c){return `<div class="device" style="width:100%">${svg(`<rect x="18" y="47" width="146" height="166" rx="15" fill="url(#case)" stroke="url(#metal)" stroke-width="5"/><path d="M60 70V43a32 32 0 0 1 64 0v${c.oldOpen?0:27}" fill="none" stroke="url(#metal)" stroke-width="13" transform="${c.oldOpen?'translate(0,-14)':''}"/><circle cx="92" cy="129" r="29" fill="url(#metal)"/><path d="M85 120h14v29H85z" fill="#21404a"/><text x="91" y="187" text-anchor="middle" fill="#e5d2a1" font-size="14">${c.oldOpen?'机械锁已打开':'机械钥匙门锁'}</text><rect x="216" y="34" width="136" height="180" rx="18" fill="url(#case)" stroke="url(#metal)" stroke-width="4"/><rect x="232" y="50" width="104" height="47" rx="6" fill="#173039"/><text x="284" y="80" text-anchor="middle" fill="#b4f8d8" font-size="20">${c.smartOpen?'已开锁':esc(c.code||'···')}</text>${[0,1,2,3,4,5,6,7,8].map((n)=>`<circle cx="${253+n%3*30}" cy="${117+Math.floor(n/3)*24}" r="5" fill="${c.smartOpen?'#9ce8c3':'#c7b485'}"/>`).join('')}<path d="M251 193h67" stroke="#ceb77e" stroke-width="8" stroke-linecap="round"/>`,375,240)}<span class="device-label">控制方式改变 · 基本功能延续</span></div>`;}
+function locks(c){return `<div class="device" style="width:100%">${svg(`<rect x="18" y="47" width="146" height="166" rx="15" fill="url(#case)" stroke="url(#metal)" stroke-width="5"/><path d="M60 70V43a32 32 0 0 1 64 0v${c.oldOpen?0:27}" fill="none" stroke="url(#metal)" stroke-width="13" transform="${c.oldOpen?'translate(0,-14)':''}"/><circle cx="92" cy="129" r="29" fill="url(#metal)"/><path d="M85 120h14v29H85z" fill="#21404a"/><text x="91" y="187" text-anchor="middle" fill="#e5d2a1" font-size="14">${c.oldOpen?'机械锁已打开':'机械钥匙门锁'}</text><rect x="216" y="34" width="136" height="180" rx="18" fill="url(#case)" stroke="url(#metal)" stroke-width="4"/><rect x="232" y="50" width="104" height="47" rx="6" fill="#173039"/><text x="284" y="80" text-anchor="middle" fill="#b4f8d8" font-size="20">${c.smartOpen?'已开锁':esc(c.code||'···')}</text>${[0,1,2,3,4,5,6,7,8].map((n)=>`<circle cx="${253+n%3*30}" cy="${117+Math.floor(n/3)*24}" r="5" fill="${c.smartOpen?'#9ce8c3':'#c7b485'}"/>`).join('')}<path d="M251 193h67" stroke="#ceb77e" stroke-width="8" stroke-linecap="round"/>`,375,240)}<span class="device-label">两种门锁 · 比较操作过程</span></div>`;}
 function windMechanism(c){const s=state.steps[state.room],final=state.room===5;let body,label;
 if(final){body=`<path d="M25 155h175" stroke="#b6a177" stroke-width="8"/><g class="${c.fan&&c.speed===2?'key-travel':''}" transform="translate(45,85)"><path d="M0 0h37v18H20v16H0z" fill="#e8c580" stroke="#fff0b4" stroke-width="3"/></g>`;label=c.fan?'模拟钥匙传送':'机关待启动';}
-else if(s===0){body=`<circle cx="115" cy="105" r="67" fill="#123c43" stroke="#bba275" stroke-width="8"/><g class="${c.fan&&c.speed?'spinner':''}" style="--spin:${c.speed===3?'.8':'4'}s">${[0,45,90,135].map(a=>`<path d="M63 105h104" stroke="#ead3a1" stroke-width="13" transform="rotate(${a} 115 105)"/>`).join('')}</g><circle cx="115" cy="105" r="19" fill="#d3b373"/>`;label=c.fan&&c.speed===3?'叶轮达到机关要求':'重型叶轮 · 需要强风';}
+else if(s===0){body=`<circle cx="115" cy="105" r="67" fill="#123c43" stroke="#bba275" stroke-width="8"/><g class="${c.fan&&c.speed?'spinner':''}" style="--spin:${c.speed===3?'.8':'4'}s">${[0,45,90,135].map(a=>`<path d="M63 105h104" stroke="#ead3a1" stroke-width="13" transform="rotate(${a} 115 105)"/>`).join('')}</g><circle cx="115" cy="105" r="19" fill="#d3b373"/>`;label=c.fan&&c.speed===3?'叶轮达到机关要求':'重型叶轮 · 门闩仍未松动';}
 else if(s===1){body=`<path d="M15 180h195" stroke="#b6a177" stroke-width="6"/><g class="${c.fan&&c.speed===1?'feather-float':c.fan&&c.speed>1?'feather-away':''}"><path d="M65 160Q31 52 139 42Q177 133 65 160Z" fill="#e0edce" stroke="#ffe9b5" stroke-width="3"/><path d="M61 179L140 39M82 145l-30-25M96 116l-34-24M108 95l34 0M93 129l35 0" stroke="#96b59b" stroke-width="3" fill="none"/></g>`;label=c.fan&&c.speed===1?'羽片被轻风平稳托起':c.fan&&c.speed>1?'气流过强，羽片偏离':'轻羽片 · 等待气流';}
 else{body=`<circle cx="115" cy="108" r="70" fill="#e9d7ad" stroke="#b19159" stroke-width="7"/><circle cx="115" cy="108" r="60" fill="#1a3940"/><g class="${busy&&c.fan?'spinner':''}" style="--spin:.6s"><path d="M115 62v46h37" stroke="#d5e8cd" fill="none" stroke-width="5" stroke-linecap="round"/></g><text x="115" y="150" fill="#e7d1a3" font-size="14" text-anchor="middle">${c.timer?c.timer+'分钟':'未定时'}</text>`;label=c.fan?'定时控制停止时刻':'到时停止 / 当前已停';}
 return `<div class="device mechanism">${svg(body)}<span class="device-label">${label}</span></div>`;}
@@ -149,12 +425,26 @@ function scene(){const i=state.room,c=state.controls[i],step=state.steps[i];cons
  return `<div class="stage"><div class="room-art" style="background-position:${i%3*50}% ${i<3?0:100}%;filter:brightness(${i===0&&!c.lamp&&!c.projector?.52:1})"></div><div class="room-badge"><span>${rooms[i].icon}</span> ${i===5?'出口验证舱':'机关探索区'} <span>·</span> ${state.passed[i]?'已取证':'等待回应'}</div><div class="stage-tip">点击 ✧ 寻找房间里的观察提示</div>${[0,1,2].map(n=>`<button class="hotspot ${state.discoveries.includes(i+'-'+n)?'found':''}" data-action="discover" data-discovery="${n}" aria-label="${tips[n]}">${state.discoveries.includes(i+'-'+n)?'✓':'✧'}</button>`).join('')}${(i===0&&step===1)||(i===5&&step===0)?`<div class="scene-screen ${!c.projector?'off':!c.curtain||c.lamp?'faint':''}" aria-label="${!c.projector?'无投影':!c.curtain||c.lamp?'图案较模糊':'清晰的线索图案'}">◈ ✧ ⬡</div>`:''}<div class="apparatus">${devices}</div><div class="state-row">${chips.map(([s,on])=>`<span class="state-chip ${on?'on':''}">${esc(s)}</span>`).join('')}</div>${pending?`<div class="burst">${rooms[i].icon}</div>`:''}</div>`;}
 function openModal(title,html){const d=$('#modal');$('#modal-title').textContent=title;$('#modal-body').innerHTML=html;if(!d.open)d.showModal();}
 function tableRecords(){return state.attempts.length?`<div class="scroll-table"><table><thead><tr><th>设备与任务</th><th>我的预测</th><th>控制方法 / 实际设置</th><th>观察结果</th></tr></thead><tbody>${state.attempts.map(a=>`<tr><td>${esc(rooms[a.room]?.tasks[a.step]?.device)}<br>${esc(a.title)}</td><td>${esc(a.prediction)}</td><td>${esc(a.operation)}</td><td>${a.ok?'✓':'↻'} ${esc(a.result)}</td></tr>`).join('')}</tbody></table></div>`:'<p>线索簿还是空的。操作设备并试运行后，你的尝试会记录在这里。</p>';}
-function noteBook(){openModal('我的控制线索簿',`<p>这里保留成功与需要调整的尝试。先看设备做了什么，再解释为什么。</p><label for="team-name">小组代号（选填，不需要真实姓名）</label><input id="team-name" maxlength="30" value="${esc(state.name)}" placeholder="例如：星光探险队"><div class="achievement-grid"><div class="achievement"><b>${state.attempts.filter(a=>a.ok).length}</b><span>任务完成</span></div><div class="achievement"><b>${state.passed.filter(Boolean).length}/6</b><span>解释取证</span></div><div class="achievement"><b>${state.attempts.filter(a=>!a.ok).length}</b><span>调整机会</span></div></div>${tableRecords()}<h3>收集到的晶石刻字</h3><p>按获得顺序：${rooms.slice(0,3).map((r,i)=>`${r.key}：${state.passed[i]?[2,4,6][i]:"尚未获得"}`).join(" → ")}。在时间锁中组合使用。</p><h3>我的解释记录</h3>${state.answers.length?state.answers.map(a=>`<div class="record-item"><b>${esc(rooms[a.room].name)} · ${a.ok?'解释正确':'继续思考'}</b><p>${esc(a.answer)}</p></div>`).join(''):'<p>完成一间密室的操作后，会出现解释任务。</p>'}<label for="reflection">迁移到身边：我会怎样控制一种设备，实现什么功能？</label><textarea id="reflection" maxlength="800" placeholder="我想让____实现____。我会先____，再____；我会通过____判断是否成功。">${esc(state.reflection)}</textarea><p class="note">开放表达由教师或同伴评阅，游戏不自动判断文字是否正确。</p><div class="modal-actions"><button class="primary" data-action="export">导出闯关报告</button><button data-action="close">返回探索</button></div>`);}
-function teacher(){openModal('教师指南 · 本课怎样使用',`<p><b>六年级《设备控制处处在》</b> · 主线约25—30分钟，建议两人一组、每间交换操作与观察角色。时长为活动设计估计，尚需学生课堂试用。</p><h3>这节课观察三个目标</h3><p>① 能说清常见设备的功能与控制方法；② 知道身边一些设备可以看作控制系统；③ 能用门锁实例说明控制方式的发展及其便利。</p><div class="teaching-note">教材第11—14页；课标“过程与控制”第30—32页、“小型系统模拟”第32—34页，教学与评价建议第48—49页。反馈、输入/计算/输出与逻辑运算是后续学习内容，本课不作必过关要求。</div><h3>40分钟课堂建议</h3><p>导入3分钟 → 示范2分钟 → 闯关25分钟 → 自创机关、同伴验证5分钟 → 展示与迁移检测5分钟。学生用时较长时，把自创机关放到下一课前或课后。</p><h3>何时介入</h3><p>第1间后追问“你控制什么、怎样控制、发生什么变化”；第3间后比较“开机”和“选模式”；第4间后引出控制系统；第5间后讨论技术进步与适用条件。</p><h3>如何评价</h3><p>线索簿记录预测、实际设置、试验结果与解释尝试。通关是证据之一，结合学生的迁移表达和同伴机关评价。不得用速度、提示次数或画面精美程度替代学习评价。</p><h3>启动与数据</h3><p>可直接打开 index.html，也可使用“启动局域网”文件。学生与教师电脑连接同一网络后访问教师电脑显示的地址。每台学生设备的进度保存在自己的浏览器，教师端不集中收集；学生需要导出报告后通过学校已有渠道提交。</p><h3>显示与声音</h3><p>默认静音；线索不依赖声音。工具栏可减少动态效果。模拟面板不代表所有品牌的真实设备；城市舱仅为模拟，不指导学生操作公共设备。</p><details><summary>查看教师用通关要点</summary>${rooms.map((r,i)=>`<p><b>${i+1}. ${r.name}</b><br>${r.hints[2]}<br>解释要点：${r.question.explain}</p>`).join('')}</details><div class="modal-actions"><button data-action="motion">${state.reduced?'恢复设备动画':'减少动态效果'}</button><button data-action="reset-confirm">重新开始一轮</button><button class="primary" data-action="close">知道了</button></div>`);}
-function assessmentData(){if(!state.assessment||typeof state.assessment!=='object')state.assessment={answers:{},submitted:false};if(!state.assessment.answers||typeof state.assessment.answers!=='object')state.assessment.answers={};return state.assessment;}
-const transferOptions={transferDevice:['照明灯','电风扇','洗衣机','电饭锅','路灯'],transferFunction:['提供照明','促进空气流动','完成脱水','煮粥','提供夜间照明'],transferMethod:['按开关','打开电源并选择风速','开启电源并选择模式','按照明开关','观察设备结果后再调整'],transferEvidence:['观察房间是否变亮','观察气流是否让机关移动','观察设备是否执行所需模式','观察是否按时停止','观察街道是否变亮']};
-function transferChoices(key,label){const a=assessmentData().answers;return `<fieldset class="transfer-group"><legend>${label}</legend><div class="assessment-options">${transferOptions[key].map(value=>`<button type="button" class="assessment-option ${a[key]===value?'selected':''}" data-action="transfer-answer" data-id="${key}" data-value="${esc(value)}" aria-pressed="${a[key]===value}">${esc(value)}</button>`).join('')}</div></fieldset>`;}
-function assessmentPanel(){const a=assessmentData(),result=scoreAssessment(a.answers),challenge=state.challenge;return `<section class="assessment-card"><div class="eyebrow">FINAL CHECK · 探险任务单</div><h2>出口档案考核</h2><p class="assessment-intro">不用长篇打字：点击五个判断，再用选项拼出一句迁移表达。这里对应任务单里的“设备—功能—控制方法、街道设备、调整解释、设备发展和身边迁移”。</p>${finalAssessment.map((item,index)=>`<fieldset class="assessment-item"><legend><span>${index+1}</span>${esc(item.label)}</legend><p>${esc(item.prompt)}</p><div class="assessment-options">${item.options.map((option,i)=>`<button type="button" class="assessment-option ${a.answers[item.id]===i?'selected':''}" data-action="assessment-answer" data-id="${item.id}" data-value="${i}" aria-pressed="${a.answers[item.id]===i}">${String.fromCharCode(65+i)} · ${esc(option)}</button>`).join('')}</div></fieldset>`).join('')}<div class="transfer-builder"><div class="eyebrow">MY TRANSFER · 选项拼句</div>${transferChoices('transferDevice','我选择的设备')}${transferChoices('transferFunction','它要实现的功能')}${transferChoices('transferMethod','我会采用的控制方法')}${transferChoices('transferEvidence','我会观察的结果')}<p class="assessment-sentence" aria-live="polite">${result.transfer.sentence||'选择四项后，这里会生成你的迁移表达。'}</p></div><div class="project-evidence"><b>项目证据</b><span>${challenge?.selfTest?'✓ 已完成自创机关自测':'○ 尚未完成自创机关自测'}</span><span>${challenge?.peerPassed?'✓ 已有同伴验证':'○ 尚未有同伴验证'}</span><small>自创机关的理由、验证和修改会一并写入报告；不要求在这里重新打字。</small></div><button class="primary assessment-submit" data-action="assessment-submit" ${result.ready?'':'disabled'}>${a.submitted?'已提交 · 再次提交会更新记录':'提交终局考核'}</button>${a.submitted?`<div class="assessment-result ${result.complete?'success':''}" role="status"><b>${result.complete?'✓ 任务单考核完成':'已记录：'+result.score+' / '+result.max+' 项判断正确'}</b><span>${result.complete?'迁移表达也已生成，可以导出报告。':'回看线索簿或密室后，可以修改选项再提交。'}</span></div>`:''}</section>`;}
+function noteBook(){openModal('我的控制线索簿',`<p>这里保留成功与需要调整的尝试。先看设备做了什么，再解释为什么。</p><label for="team-name">小组代号（选填，不需要真实姓名）</label><input id="team-name" maxlength="30" value="${esc(state.name)}" placeholder="例如：星光探险队"><div class="achievement-grid"><div class="achievement"><b>${state.attempts.filter(a=>a.ok).length}</b><span>任务完成</span></div><div class="achievement"><b>${state.passed.filter(Boolean).length}/6</b><span>解释取证</span></div><div class="achievement"><b>${state.attempts.filter(a=>!a.ok).length}</b><span>调整机会</span></div></div>${tableRecords()}<h3>收集到的晶石刻字</h3><p>按获得顺序：${rooms.slice(0,3).map((r,i)=>`${r.key}：${state.passed[i]?[2,4,6][i]:"尚未获得"}`).join(" → ")}。在时间锁中组合使用。</p><h3>我的解释记录</h3>${state.answers.length?state.answers.map(a=>`<div class="record-item"><b>${esc(rooms[a.room].name)} · ${a.ok?'解释正确':'继续思考'}</b><p>${esc(a.answer)}</p></div>`).join(''):'<p>完成一间密室的操作后，会出现解释任务。</p>'}${state.passed.every(Boolean)?assessmentReport():'<p>完成密室后，可在终局用点击选项完成考核。</p>'}${state.reflection?'<p>你之前记录的补充：'+esc(state.reflection)+'</p>':''}<div class="modal-actions"><button class="primary" data-action="export">导出闯关报告</button><button data-action="close">返回探索</button><button data-action="reset-confirm">重新开始一轮</button></div>`);}
+function assessmentData(){
+ if(!state.assessment||state.assessment.version!==2)state.assessment={version:2,answers:{},submitted:false,page:0,firstAttempt:null,submissions:0};
+ const data=state.assessment;
+ if(!data.answers||typeof data.answers!=='object'||Array.isArray(data.answers))data.answers={};
+ if(!Number.isInteger(data.page)||data.page<0||data.page>3)data.page=0;
+ return data;
+}
+function transferChoices(key,label){
+ const a=assessmentData().answers;
+ return `<fieldset class="transfer-group"><legend>${label}</legend><div class="assessment-options">${transferOptions[key].map((value,i)=>`<button type="button" class="assessment-option ${a[key]===value?'selected':''}" data-action="transfer-answer" data-id="${key}" data-value="${esc(value)}" data-focus="transfer-${key}-${i}" aria-pressed="${a[key]===value}">${esc(value)}</button>`).join('')}</div></fieldset>`;
+}
+function materialCards(){
+ return `<details class="extension-reading"><summary>阅读：设备发展档案 · 可展开查阅</summary><p class="note">依据教材第14页“拓展与提升”整理，无需背诵年代。</p>${extensionMaterials.map(m=>`<article><h3>${m.title}</h3><p>${m.text}</p></article>`).join('')}</details>`;
+}
+function assessmentPanel(){
+ const a=assessmentData(),result=scoreAssessment(a.answers),challenge=state.challenge,items=finalAssessment.filter(q=>q.group===a.page),answered=finalAssessment.filter(q=>Number.isInteger(a.answers[q.id])).length;
+ const transferFeedback=!result.transfer.complete?'请完成四项选择。':result.transfer.correct?'这组设备、功能、方法和观察结果相互对应。':'这组搭配尚不合理。请核对设备能做什么、用什么控制、观察什么结果。';
+ return `<section class="assessment-card"><div class="eyebrow">FINAL CHECK · 探险任务单</div><h2 id="assessment-title" tabindex="-1">出口档案考核</h2><p class="assessment-intro">完成16道情境题，再用选项拼出控制方案。第3、4组可以查阅设备发展档案。首答和后续订正分别记录。</p><nav class="assessment-tabs" aria-label="考核分组">${assessmentGroups.map((label,i)=>`<button data-action="assessment-page" data-page="${i}" aria-current="${a.page===i?'step':'false'}">${i+1}. ${label}<small>${finalAssessment.filter(q=>q.group===i&&Number.isInteger(a.answers[q.id])).length}/4</small></button>`).join('')}</nav><p class="assessment-progress">已作答 ${answered}/16 · 当前第${a.page+1}组${a.firstAttempt?' · 首答 '+a.firstAttempt.score+'/16':''}</p>${a.page>=2?materialCards():''}${items.map(item=>`<fieldset class="assessment-item"><legend><span>${finalAssessment.indexOf(item)+1}</span>${esc(item.label)}</legend><p>${esc(item.prompt)}</p><div class="assessment-options">${item.options.map((option,i)=>`<button type="button" class="assessment-option ${a.answers[item.id]===i?'selected':''}" data-action="assessment-answer" data-id="${item.id}" data-value="${i}" data-focus="assessment-${item.id}-${i}" aria-pressed="${a.answers[item.id]===i}">${String.fromCharCode(65+i)} · ${esc(option)}</button>`).join('')}</div>${a.submitted?`<p class="answer-review"><b>${a.answers[item.id]===item.correct?'✓ 判断合理':'↻ 可以再想想'}</b> ${item.explanation}</p>`:''}</fieldset>`).join('')}${a.page===3?`<div class="transfer-builder"><div class="eyebrow">MY TRANSFER · 选项拼句</div>${transferChoices('transferDevice','我选择的设备')}${transferChoices('transferFunction','它要实现的功能')}${transferChoices('transferMethod','我会采用的控制方法')}${transferChoices('transferEvidence','我会观察的结果')}<p class="assessment-sentence" aria-live="polite">${esc(result.transfer.sentence)||'选择四项后，这里会生成你的控制方案。'}</p>${a.submitted?`<p class="answer-review">${transferFeedback}</p>`:''}</div>`:''}<div class="assessment-navigation">${a.page>0?'<button data-action="assessment-page" data-page="'+(a.page-1)+'">← 上一组</button>':''}${a.page<3?'<button class="primary" data-action="assessment-page" data-page="'+(a.page+1)+'">下一组 →</button>':''}<button class="primary assessment-submit" data-action="assessment-submit" data-focus="assessment-submit" ${result.ready?'':'disabled'}>${a.firstAttempt?'提交订正':'提交首答'}</button></div>${a.submitted?`<div class="assessment-result ${result.complete?'success':''}" role="status"><b>${result.complete?'✓ 任务单考核通过':'已记录：'+result.score+' / 16 项判断合理'}</b><span>首答 ${a.firstAttempt.score}/16；当前 ${result.score}/16。迁移搭配${result.transfer.correct?'合理':'还需调整'}。可以回看各组说明再订正。</span></div>`:''}<div class="project-evidence"><b>项目证据</b><span>${challenge?.selfTest?'✓ 已完成机关自测':'○ 机关自测待完成'}</span><span>${challenge?.peerPassed?'✓ 已有同伴验证':'○ 同伴验证待完成'}</span><small>已有操作、尝试与项目记录自动带入报告。</small></div></section>`;
+}
 function finish(){return `<div class="final-wrap"><section class="finish-hero"><div class="eyebrow">THE GATE IS OPEN</div><h1>出口已开启，探索还在继续。</h1><p>你通过操作、观察和解释，点亮了五枚晶石。现在，把密室里的发现带回身边：设备怎样回应我们的控制？</p><div class="badge-row"><span class="pill">◈ 设备观察员</span><span class="pill">✧ 控制探索者</span><span class="pill">⌛ 科技发现者</span></div></section><div class="achievement-grid"><div class="achievement"><b>${state.attempts.filter(a=>a.ok).length}/18</b><span>操作任务通过</span></div><div class="achievement"><b>${state.passed.filter(Boolean).length}/6</b><span>解释取证通过</span></div><div class="achievement"><b>${minutes()}分钟</b><span>本页有效活动时间 · 不评分</span></div></div>${assessmentPanel()}<div class="finish-grid"><section><div class="eyebrow">MY EVIDENCE</div><h2>带走我的发现</h2><p>线索簿保留设备、控制方法、观察结果和终局考核，可直接导出给教师。</p><button class="primary" data-action="notebook">查看并导出线索簿 →</button></section><section><div class="eyebrow">CREATE A CHALLENGE</div><h2>换我来设计机关</h2><p>设计一张风力机关卡，先自己验证，再交换给同伴尝试，根据反馈修改。</p><button class="gold" data-action="creator">设计同伴挑战 →</button></section></div><div class="modal-actions"><button data-action="review">回看密室</button><button class="plain" data-action="reset-confirm">重新开始一轮</button></div></div>`;}
 function operation(c,r,s){if(r===0||r===5&&s!==1)return s===2?`播放器${c.audio?'开':'关'}，音量${c.volume}格`:`照明${c.lamp?'开':'关'}；投影${c.projector?'开':'关'}；窗帘${c.curtain?'合':'开'}`;if(r===1||r===5)return `风扇${c.fan?'开':'关'}，${c.speed}挡，${c.timer?'定时'+c.timer+'分钟':'不定时'}`;if(r===2)return s<2?`洗衣机${c.washer?'开':'关'}，${c.wmode}`:`电饭锅${c.cooker?'开':'关'}，${c.cmode}`;if(r===3)return `${c.role}；车辆${c.vehicle?'开':'关'}；信号${c.signal}；路灯${c.street?'开':'关'}`;return s===0?`${c.key}；${c.oldOpen?'已转动开锁':'未开锁'}`:s===1?`模拟密码${c.code}；${c.smartOpen?'验证开锁':'未开锁'}`:c.evolution;}
 async function run(){if(pending||busy||state.steps[state.room]>=3)return;const r=state.room,s=state.steps[r],c={...state.controls[r]},prediction=state.predictions[r];if(!prediction){feedback={ok:false,text:'请先选一个预测。可以选“还不确定”，再用试验比较。'};render();$('#prediction')?.focus();return;}busy=true;feedback={ok:false,text:'设备正在按当前设置运行，请观察画面与状态。'};render();await new Promise(resolve=>setTimeout(resolve,state.reduced?100:650));const result=check(r,s,c);const timed=result.ok&&((r===1&&s===2)||(r===5&&s===1));if(timed){feedback={ok:false,text:'时间快进：模拟第15分钟，风扇仍在运行……'};render();await new Promise(resolve=>setTimeout(resolve,state.reduced?100:850));state.controls[r].fan=false;result.text+='。模拟30分钟已到，风扇停止；这不是实际等待30分钟。';}
@@ -167,8 +457,12 @@ const discoveryTexts=[
  ['钥匙与锁孔匹配后，还需要转动钥匙来开锁。','智能门锁可以有多种开锁方式；本关只模拟密码。','多种形式的门锁可以并存，科技进步带来更多选择。'],
  ['线索簿保存着控制方法，可以迁移到新任务。','先预测，再操作，观察结果，再调整。','常见设备可以看作控制系统；它们按规则实现功能。']
 ];
-function assessmentReport(){const a=assessmentData(),result=scoreAssessment(a.answers);return `<h2>终局任务单考核</h2><p>五项判断：${result.score}/${result.max}；${a.submitted?(result.complete?'已完成':'已提交，部分判断需要回看线索'):'尚未提交'}。</p>${finalAssessment.map(item=>`<p><b>${esc(item.label)}</b>：${a.answers[item.id]===undefined?'未选择':esc(item.options[a.answers[item.id]])}（${a.answers[item.id]===item.correct?'正确':'待调整'}）</p>`).join('')}<p><b>迁移表达：</b>${result.transfer.sentence?esc(result.transfer.sentence):'尚未拼出'}</p>`;}
-function exportReport(){const body=`<h1>机关密室 · 学习证据报告</h1><p>小组代号：${esc(state.name||'未填写')}　已取证：${state.passed.filter(Boolean).length}/6　有效活动时间：${minutes()}分钟（不评分）</p>${assessmentReport()}<h2>设备—控制方法—观察结果</h2>${tableRecords()}<h2>解释尝试</h2>${state.answers.map(a=>`<p><b>${esc(rooms[a.room].name)}</b>：${esc(a.answer)}（${a.ok?'正确':'继续思考'}）</p>`).join('')}<h2>迁移表达（旧版开放记录）</h2><p style="white-space:pre-wrap">${esc(state.reflection||'未使用长文本输入')}</p><h2>自创机关与同伴验证</h2>${state.challenge?`<p>${esc(state.challenge.title)}；目标风速${state.challenge.speed}挡；定时${state.challenge.timer}分钟。</p><p>设计理由：${esc(state.challenge.reason)}</p><p>设计者验证：${state.challenge.selfTest?'通过':'未通过或未进行'}；同伴试验${state.challenge.peerAttempts||0}次；通过${state.challenge.peerPassed?'是':'否'}。</p><p>同伴建议：${esc(state.challenge.peerFeedback||'未填写')}</p><p>修改说明：${esc(state.challenge.revision||'未填写')}</p>${(state.challenge.history||[]).map(h=>`<p>此前版本：${esc(h.title)}，${h.speed}挡/${h.timer}分钟；同伴试验${h.peerAttempts||0}次，通过${h.peerPassed?'是':'否'}；建议：${esc(h.peerFeedback||'未填写')}</p>`).join('')}`:'<p>尚未设计。</p>'}<p>提示使用量：${state.hints.join(' / ')}（仅供观察，不据此扣分）。教学目标：设备控制方法、生活中的控制系统、控制系统的发展变化。</p><p>说明：以上为当前浏览器内的学习记录；选择题由游戏判定，终局考核中的迁移表达由选项拼成，开放回答不自动评分。</p>`;download(`<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>机关密室学习证据</title><style>body{max-width:1000px;margin:35px auto;padding:20px;font:15px/1.8 system-ui;color:#1b383a}h1,h2{color:#205d53}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:10px;border:1px solid #a9bcb8;text-align:left}th{background:#eaf3ef}@media print{body{margin:0}}</style><body>${body}</body></html>`,'机关密室—学习证据报告.html','text/html;charset=utf-8');}
+function assessmentReport(){
+ const a=assessmentData(),result=scoreAssessment(a.answers),first=a.firstAttempt;
+ const draft=!a.submitted;
+ return `<section class="assessment-report"><h2>终局任务单考核</h2><p>首答：${first?first.score+'/16':'尚未提交'}；最近提交：${a.lastAttempt?a.lastAttempt.score+'/16':'尚未提交'}；${draft?'作答草稿未评分':'本次已提交：'+result.score+'/16'}。提交次数：${a.submissions||0}。</p>${finalAssessment.map(item=>`<p><b>${esc(item.label)}</b>：${a.answers[item.id]===undefined?'未选择':esc(item.options[a.answers[item.id]])}${draft?'（未提交）':'（'+(a.answers[item.id]===item.correct?'合理':'待调整')+'）'}${first?'<br>首答：'+esc(item.options[first.answers[item.id]]||'未选择'):''}</p>`).join('')}<p><b>迁移表达：</b>${esc(result.transfer.sentence)||'尚未拼出'}${draft?'（未提交）':'（'+(result.transfer.correct?'搭配合理':'待核对搭配')+'）'}</p>${first?'<p>首答迁移搭配：'+(first.transferCorrect?'合理':'待调整')+'</p>':''}</section>`;
+}
+function exportReport(){const body=`<h1>机关密室 · 学习证据报告</h1><p>小组代号：${esc(state.name||'未填写')}　已取证：${state.passed.filter(Boolean).length}/6　有效活动时间：${minutes()}分钟（不评分）</p>${assessmentReport()}<h2>设备—控制方法—观察结果</h2>${tableRecords()}<h2>解释尝试</h2>${state.answers.map(a=>`<p><b>${esc(rooms[a.room].name)}</b>：${esc(a.answer)}（${a.ok?'正确':'继续思考'}）</p>`).join('')}<h2>迁移表达（旧版开放记录）</h2><p style="white-space:pre-wrap">${esc(state.reflection||'未使用长文本输入')}</p><h2>自创机关与同伴验证</h2>${state.challenge?`<p>${esc(state.challenge.title)}；目标风速${state.challenge.speed}挡；定时${state.challenge.timer}分钟。</p><p>设计理由：${esc(state.challenge.reason)}</p><p>设计者验证：${state.challenge.selfTest?'通过':'未通过或未进行'}；同伴试验${state.challenge.peerAttempts||0}次；通过${state.challenge.peerPassed?'是':'否'}。</p><p>同伴建议：${esc(state.challenge.peerFeedback||'未填写')}</p><p>修改说明：${esc(state.challenge.revision||'未填写')}</p>${(state.challenge.history||[]).map(h=>`<p>此前版本：${esc(h.title)}，${h.speed}挡/${h.timer}分钟；同伴试验${h.peerAttempts||0}次，通过${h.peerPassed?'是':'否'}；建议：${esc(h.peerFeedback||'未填写')}</p>`).join('')}`:'<p>尚未设计。</p>'}<p>提示使用量：${state.hints.join(' / ')}（仅供观察，不据此扣分）。教学目标：设备控制方法、生活中的控制系统、控制系统的发展变化。</p><p>说明：以上为当前浏览器内的学习记录；选择题由游戏判定，终局考核中的迁移表达由选项拼成并核对对应关系；开放项目记录由教师评阅。</p>`;download(`<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>机关密室学习证据</title><style>body{max-width:1000px;margin:35px auto;padding:20px;font:15px/1.8 system-ui;color:#1b383a}h1,h2{color:#205d53}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:10px;border:1px solid #a9bcb8;text-align:left}th{background:#eaf3ef}@media print{body{margin:0}}</style><body>${body}</body></html>`,'机关密室—学习证据报告.html','text/html;charset=utf-8');}
 function download(content,name,type){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('报告已交给浏览器下载，请查看下载列表。');}
 let partnerControls={fan:false,speed:0,timer:0};
 function creator(){const c=state.challenge||{title:'轻风护送羽片',speed:1,timer:30,reason:'',peerFeedback:'',revision:''};openModal('机关设计台 · 让同伴验证你的想法',`<p>用风扇设计一个可完成的机关。为同伴写清任务，但由同伴决定怎样操作。</p><label for="challenge-title">机关名称 / 要完成的事</label><input id="challenge-title" maxlength="60" value="${esc(c.title)}"><label for="challenge-speed">需要的风速</label><select id="challenge-speed">${[1,2,3].map(n=>`<option ${c.speed===n?'selected':''}>${n}</option>`).join('')}</select><label for="challenge-timer">需要何时停止（分钟）</label><select id="challenge-timer">${[15,30,60].map(n=>`<option ${c.timer===n?'selected':''}>${n}</option>`).join('')}</select><label for="challenge-reason">为什么这样设置？</label><textarea id="challenge-reason" maxlength="300" placeholder="例如：羽片很轻，需要小风；我希望装置到时间后停止。">${esc(c.reason)}</textarea><label for="challenge-revision">收到建议后，我修改了什么？（首次可留空）</label><textarea id="challenge-revision" maxlength="300">${esc(c.revision||'')}</textarea><div class="modal-actions"><button class="primary" data-action="save-challenge">保存并自己试验</button></div>`);}
@@ -185,16 +479,17 @@ document.addEventListener('click',async e=>{
  if(a==='close'){$('#modal').close();return;}
  if(a==='notebook'){noteBook();return;}
  if(a==='export'){exportReport();return;}
- if(a==='assessment-answer'){const data=assessmentData();data.answers[b.dataset.id]=Number(b.dataset.value);data.submitted=false;save();render();return;}
- if(a==='transfer-answer'){const data=assessmentData();data.answers[b.dataset.id]=b.dataset.value;data.submitted=false;save();render();return;}
- if(a==='assessment-submit'){const data=assessmentData(),result=scoreAssessment(data.answers);if(!result.ready){toast('请完成五个判断和四个迁移选项，再提交终局考核。');return;}data.submitted=true;save();render();return;}
+ if(a==='assessment-answer'){const data=assessmentData();data.answers[b.dataset.id]=Number(b.dataset.value);data.submitted=false;save();render(b.dataset.focus);return;}
+ if(a==='transfer-answer'){const data=assessmentData();data.answers[b.dataset.id]=b.dataset.value;data.submitted=false;save();render(b.dataset.focus);return;}
+ if(a==='assessment-page'){const data=assessmentData(),page=Number(b.dataset.page);if(page<0||page>3)return;data.page=page;save();render();$('#assessment-title')?.focus();return;}
+ if(a==='assessment-submit'){const data=assessmentData(),result=scoreAssessment(data.answers);if(!result.ready){toast('请完成16题和四个迁移选项，再提交。');return;}const snapshot={answers:{...data.answers},score:result.score,transferCorrect:result.transfer.correct,seconds:state.elapsed};if(!data.firstAttempt)data.firstAttempt=snapshot;data.lastAttempt=snapshot;data.submissions=(data.submissions||0)+1;data.submitted=true;save();render('assessment-submit');return;}
  if(a==='start'){state.started=true;save();render();window.scrollTo(0,0);return;}
  if(a==='sound'){state.sound=!state.sound;save();render();if(state.sound)sound();return;}
  if(a==='motion'){state.reduced=!state.reduced;save();render();toast(state.reduced?'已减少动态效果，操作与线索仍然有效。':'已恢复设备动画。');return;}
  if(a==='room'){const n=Number(b.dataset.room);if(n>0&&!state.passed[n-1])return;state.room=n;pending=!!state.pending?.[n];feedback=pending?{ok:true,text:'这个任务已经通过，点击“记录发现，继续”。'}:null;save();render();return;}
  if(a==='run'){await run();return;}
  if(a==='next-step'&&pending){state.steps[r]=Math.min(3,s+1);pending=false;state.pending[r]=false;feedback=null;state.predictions[r]='';save();render();const title=$('.task-panel h2, .task-panel h3');if(title){title.tabIndex=-1;title.focus({preventScroll:true});title.scrollIntoView({block:'nearest',behavior:'auto'});}return;}
- if(a==='hint'){state.hints[r]=Math.min(3,state.hints[r]+1);save();render('hint');return;}
+ if(a==='hint'&&s<3){const count=currentHintCount();if(count===2&&!state.attempts.some(t=>t.room===r&&t.step===s)){toast('先做一次试运行，观察设备的回应后，再查看具体操作帮助。');return;}state.taskHints[r][s]=Math.min(3,count+1);state.hints[r]=Math.max(state.hints[r],state.taskHints[r][s]);save();render('hint');return;}
  if(a==='discover'){const n=Number(b.dataset.discovery),id=r+'-'+n;if(!state.discoveries.includes(id))state.discoveries.push(id);save();render();toast(discoveryTexts[r][n]);return;}
  if(a==='answer'&&s===3&&!state.passed[r]){const n=Number(b.dataset.answer),q=rooms[r].question,ok=n===q.correct;state.answers.push({room:r,answer:q.options[n],ok});feedback={ok,text:ok?q.explain:'再想一想你的操作经历。需要把设备、控制方法和实现的功能联系起来。'};if(ok){state.passed[r]=true;sound();}save();render(ok?'next-room':b.dataset.focus);return;}
  if(a==='next-room'&&state.passed[r]){if(r===5)state.finished=true;else state.room=r+1;feedback=null;pending=!!state.pending?.[state.room];save();render();window.scrollTo(0,0);return;}
